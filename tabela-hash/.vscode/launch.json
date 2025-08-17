@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Executar C++",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/main.exe",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": true,
+        "MIMode": "gdb",
+        "miDebuggerPath": "c:/Program Files (x86)/Falcon/MinGW/bin/gdb.exe",
+        "preLaunchTask": "compilar"
+      }
+    ]
+  }
