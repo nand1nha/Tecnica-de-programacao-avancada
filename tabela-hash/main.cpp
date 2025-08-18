@@ -43,18 +43,32 @@ void inicializa(){
 }
 
 
-void inicializaOrdenado(){
+void ordernarPorNome(){
 	for(int pos = 0; pos < 1000; pos++){
 		Aluno *aOrdenado[a[pos].quantidade];
-		Aluno *atual = a.inicio;
+		Aluno *atual = a[pos].inicio;
 		int i = 0;
 		while(atual != NULL){
 			aOrdenado[i] = atual;
 			atual = atual->prox;
-			i++
+			i++;
+		}
+		// Ordenar aOrdenado por nome
+		qsort(aOrdenado, a[pos].quantidade, sizeof(Aluno*), compararPorNome);
+		a[pos].inicio = aOrdenado[0];
+		a[pos].fim = aOrdenado[a[pos].quantidade - 1];
+		for(int j = 0; j < a[pos].quantidade - 1; j++){
+			aOrdenado[j]->prox = aOrdenado[j + 1];
+			aOrdenado[j + 1]->ante = aOrdenado[j];
 		}
 	}
 	
+}
+
+int compararPorNome(const void *a, const void *b) {
+    Aluno *alunoA = *(Aluno **)a; // pega o ponteiro para Aluno do vetor
+    Aluno *alunoB = *(Aluno **)b;
+    return strcmp(alunoA->nome, alunoB->nome);
 }
 
 
@@ -102,10 +116,6 @@ Aluno *lerAluno(){
 }
 
 
-int *ordenarPorNome( Aluno *a, Aluno *b){
-	return strcmp(atual->nome, nome);
-}
-
 int funcaoHash100(const char* cpf){
 	char ultimosDoisDigitos[3];
 	strncpy(&ultimosDoisDigitos[0], cpf + 12, 1);
@@ -147,6 +157,8 @@ int funcaoHash100000(const char* cpf){
 	int pos = atoi(ultimosDoisDigitos);
 	return pos;
 }
+
+
 
 Aluno *buscarMatricula(int pos,const char* matricula){
 	Aluno *atual = a[pos].inicio;
@@ -308,7 +320,7 @@ int main(){
     inicio = clock();
 	lerDados("alunos_completos.csv");
 	
-	void qsort(void *base, size_t num, size_t size, int (*ordenarPorNome()));
+	ordernarPorNome();
 
 	fim = clock();
 
