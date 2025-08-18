@@ -29,7 +29,7 @@ struct Alunos{
 
 
 // Alunos a[100];
-Alunos a[1000]; 
+Alunos a[1000]; //89357 milissegundos // 
 // Alunos a[10000]; 
 // Alunos a[100000];
 
@@ -54,7 +54,11 @@ void ordernarPorNome(){
 			i++;
 		}
 		// Ordenar aOrdenado por nome
-		qsort(aOrdenado, a[pos].quantidade, sizeof(Aluno*), compararPorNome);
+		qsort(aOrdenado, a[pos].quantidade, sizeof(Aluno*), [](const void *a, const void *b) {
+			Aluno *alunoA = *(Aluno **)a;
+			Aluno *alunoB = *(Aluno **)b;
+			return strcmp(alunoA->nome, alunoB->nome);
+		});
 		a[pos].inicio = aOrdenado[0];
 		a[pos].fim = aOrdenado[a[pos].quantidade - 1];
 		for(int j = 0; j < a[pos].quantidade - 1; j++){
@@ -64,13 +68,6 @@ void ordernarPorNome(){
 	}
 	
 }
-
-int compararPorNome(const void *a, const void *b) {
-    Aluno *alunoA = *(Aluno **)a; // pega o ponteiro para Aluno do vetor
-    Aluno *alunoB = *(Aluno **)b;
-    return strcmp(alunoA->nome, alunoB->nome);
-}
-
 
 bool insere(int pos, Aluno *y){
     if(y == NULL) return false;
@@ -278,14 +275,14 @@ void printAluno(Aluno *p){
 	cout<< "Cidade: " << p->cidade << endl;
 	cout << "----------------------" << endl;
 	
-	int excluir;
-	cout << "Se deseja excluir aluno digite 0 / Se deseja sair digite 1: ";
-	cin >>  excluir;
-	if(excluir == 0) {
-		int pos = funcaoHash1000(p->cpf);
-		excluirAluno(pos, p);
+	// int excluir;
+	// cout << "Se deseja excluir aluno digite 0 / Se deseja sair digite 1: ";
+	// cin >>  excluir;
+	// if(excluir == 0) {
+	// 	int pos = funcaoHash1000(p->cpf);
+	// 	excluirAluno(pos, p);
 		
-	}
+	// }
 	
 	return ;
 }
@@ -320,41 +317,41 @@ int main(){
     inicio = clock();
 	lerDados("alunos_completos.csv");
 	
-	ordernarPorNome();
 
 	fim = clock();
-
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
 	
 	
-
+	inicio = clock();
+	cout << "------ Os 10 alunos buscados ------\n" << endl;
+	Aluno *procurado;
+	procurado = buscarNome("Iolanda Prado Palmer");
+	printAluno(procurado);
+	procurado = buscarNome("Carmelo Amazonas Ross");
+	printAluno(procurado);
+	procurado = buscarNome("Fausto Rocha Canhoto");
+	printAluno(procurado);
+	procurado = buscarNome("Gema Saraiva Crawford");
+	printAluno(procurado);
+	procurado = buscarNome("Ruth Ascanio Copeland");
+	printAluno(procurado);
+	procurado = buscarNome("Alejandro Hanson Adauto");
+	printAluno(procurado);
+	procurado = buscarNome("Richard Camacho Martin");
+	printAluno(procurado);
+	procurado = buscarNome("Ignacio Neal Margot");
+	printAluno(procurado);
+	procurado = buscarNome("Matthew Liu Kaufman");
+	printAluno(procurado);
+	procurado = buscarNome("Alfeu Mitchell Knox");
+	printAluno(procurado);
 	
-	// inicio = clock();
-	// cout << "------ Os 10 alunos buscados ------\n" << endl;
-	// Aluno *procurado;
-	// procurado = buscarNome("Iolanda Prado Palmer");
-	// printAluno(procurado);
-	// procurado = buscarNome("Carmelo Amazonas Ross");
-	// printAluno(procurado);
-	// procurado = buscarNome("Fausto Rocha Canhoto");
-	// printAluno(procurado);
-	// procurado = buscarNome("Gema Saraiva Crawford");
-	// printAluno(procurado);
-	// procurado = buscarNome("Ruth Ascanio Copeland");
-	// printAluno(procurado);
-	// procurado = buscarNome("Alejandro Hanson Adauto");
-	// printAluno(procurado);
-	// procurado = buscarNome("Richard Camacho Martin");
-	// printAluno(procurado);
-	// procurado = buscarNome("Ignacio Neal Margot");
-	// printAluno(procurado);
-	// procurado = buscarNome("Matthew Liu Kaufman");
-	// printAluno(procurado);
-	// procurado = buscarNome("Alfeu Mitchell Knox");
-	// printAluno(procurado);
-	// 
-	// fim = clock();
-	// cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
+	fim = clock();
+	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
+
+	ordernarPorNome();
+	procurado = buscarNome("Iolanda Prado Palmer");
+	printAluno(procurado);
 	
 	// char matricula[9];
 	// Aluno *procurado;
