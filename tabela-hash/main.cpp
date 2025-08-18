@@ -29,7 +29,7 @@ struct Alunos{
 
 
 // Alunos a[100];
-Alunos a[1000]; //89357 milissegundos // 
+Alunos a[1000]; //89357 milissegundos, busca ordenado por cpf 1027 milissegundos, busca ordenado por nome  
 // Alunos a[10000]; 
 // Alunos a[100000];
 
@@ -317,7 +317,8 @@ int main(){
     inicio = clock();
 	lerDados("alunos_completos.csv");
 	
-
+	ordernarPorNome();
+	
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
 	
@@ -349,9 +350,6 @@ int main(){
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
 
-	ordernarPorNome();
-	procurado = buscarNome("Iolanda Prado Palmer");
-	printAluno(procurado);
 	
 	// char matricula[9];
 	// Aluno *procurado;
