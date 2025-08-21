@@ -63,17 +63,17 @@ void ordernarPorNome(){
 		// Ordenar aOrdenado por nome
 		qsort(aOrdenado, a[pos].quantidade, sizeof(Aluno*), comparaNome);
 		a[pos].inicio = aOrdenado[0];
-		a[pos].fim = aOrdenado[a[pos].quantidade - 1];
-		atual = aOrdenado[1];
 		a[pos].inicio->ante = NULL;
 		a[pos].inicio->prox = aOrdenado[1];
-		a[pos].fim->prox = NULL;
-		a[pos].fim->ante = aOrdenado[a[pos].quantidade - 2];
+		atual = aOrdenado[1];
 		for(int j = 1; j < a[pos].quantidade - 1; j++){
 			atual->prox = aOrdenado[j + 1];
 			atual->ante = aOrdenado[j - 1];
 			atual = atual->prox;
 		}
+		a[pos].fim = aOrdenado[a[pos].quantidade - 1];
+		a[pos].fim->prox = NULL;
+		a[pos].fim->ante = aOrdenado[a[pos].quantidade - 2];
 		
 	}
 	
