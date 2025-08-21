@@ -6,7 +6,7 @@
 #include <cstring>
 #include <ctime>
 #include <string>
-
+#define TAMANHO 1000
 using namespace std;
 
 struct Aluno{
@@ -29,12 +29,12 @@ struct Alunos{
 
 
 // Alunos a[100];
-Alunos a[1000]; //89357 milissegundos, busca ordenado por cpf 1027 milissegundos, busca ordenado por nome  
+Alunos a[TAMANHO]; //89357 milissegundos, busca ordenado por cpf 1027 milissegundos, busca ordenado por nome  
 // Alunos a[10000]; 
 // Alunos a[100000];
 
 void inicializa(){
-	for(int i = 0; i < 1000; i++){
+	for(int i = 0; i < TAMANHO; i++){
  		a[i].inicio = NULL;
     	a[i].fim = NULL;
     	a[i].quantidade = 0;
@@ -42,10 +42,17 @@ void inicializa(){
    
 }
 
+int comparaNome(const void *a, const void *b) {
+	Aluno **a1;
+	Aluno **b1;
+	a1 = (Aluno **)a;
+	b1 = (Aluno **)b;
+	return strcmp((*a1)->nome, (*b1)->nome);
+}
 
 void ordernarPorNome(){
-	for(int pos = 0; pos < 1000; pos++){
-		Aluno *aOrdenado[a[pos].quantidade];
+	for(int pos = 0; pos < TAMANHO; pos++){
+		Aluno **aOrdenado = new Aluno*[a[pos].quantidade];
 		Aluno *atual = a[pos].inicio;
 		int i = 0;
 		while(atual != NULL){
@@ -54,17 +61,20 @@ void ordernarPorNome(){
 			i++;
 		}
 		// Ordenar aOrdenado por nome
-		qsort(aOrdenado, a[pos].quantidade, sizeof(Aluno*), [](const void *a, const void *b) {
-			Aluno *alunoA = *(Aluno **)a;
-			Aluno *alunoB = *(Aluno **)b;
-			return strcmp(alunoA->nome, alunoB->nome);
-		});
+		qsort(aOrdenado, a[pos].quantidade, sizeof(Aluno*), comparaNome);
 		a[pos].inicio = aOrdenado[0];
 		a[pos].fim = aOrdenado[a[pos].quantidade - 1];
-		for(int j = 0; j < a[pos].quantidade - 1; j++){
-			aOrdenado[j]->prox = aOrdenado[j + 1];
-			aOrdenado[j + 1]->ante = aOrdenado[j];
+		atual = aOrdenado[1];
+		a[pos].inicio->ante = NULL;
+		a[pos].inicio->prox = aOrdenado[1];
+		a[pos].fim->prox = NULL;
+		a[pos].fim->ante = aOrdenado[a[pos].quantidade - 2];
+		for(int j = 1; j < a[pos].quantidade - 1; j++){
+			atual->prox = aOrdenado[j + 1];
+			atual->ante = aOrdenado[j - 1];
+			atual = atual->prox;
 		}
+		
 	}
 	
 }
@@ -186,7 +196,7 @@ Aluno *buscarCpf(int pos, const char* cpf){
 
 Aluno *buscarNome(const char* nome){
 	int pos;
-	for(pos = 0; pos < 1000; pos++){
+	for(pos = 0; pos < TAMANHO; pos++){
 		Aluno *atual = a[pos].inicio;
 		while(atual != NULL){
 			if(strcmp(atual->nome, nome) == 0){
@@ -321,34 +331,36 @@ int main(){
 	
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
+
+	exibirAlunos(0); // Exibe os alunos da primeira posição (pos 0)
 	
 	
-	inicio = clock();
-	cout << "------ Os 10 alunos buscados ------\n" << endl;
-	Aluno *procurado;
-	procurado = buscarNome("Iolanda Prado Palmer");
-	printAluno(procurado);
-	procurado = buscarNome("Carmelo Amazonas Ross");
-	printAluno(procurado);
-	procurado = buscarNome("Fausto Rocha Canhoto");
-	printAluno(procurado);
-	procurado = buscarNome("Gema Saraiva Crawford");
-	printAluno(procurado);
-	procurado = buscarNome("Ruth Ascanio Copeland");
-	printAluno(procurado);
-	procurado = buscarNome("Alejandro Hanson Adauto");
-	printAluno(procurado);
-	procurado = buscarNome("Richard Camacho Martin");
-	printAluno(procurado);
-	procurado = buscarNome("Ignacio Neal Margot");
-	printAluno(procurado);
-	procurado = buscarNome("Matthew Liu Kaufman");
-	printAluno(procurado);
-	procurado = buscarNome("Alfeu Mitchell Knox");
-	printAluno(procurado);
+	// inicio = clock();
+	// cout << "------ Os 10 alunos buscados ------\n" << endl;
+	// Aluno *procurado;
+	// procurado = buscarNome("Iolanda Prado Palmer");
+	// printAluno(procurado);
+	// procurado = buscarNome("Carmelo Amazonas Ross");
+	// printAluno(procurado);
+	// procurado = buscarNome("Fausto Rocha Canhoto");
+	// printAluno(procurado);
+	// procurado = buscarNome("Gema Saraiva Crawford");
+	// printAluno(procurado);
+	// procurado = buscarNome("Ruth Ascanio Copeland");
+	// printAluno(procurado);
+	// procurado = buscarNome("Alejandro Hanson Adauto");
+	// printAluno(procurado);
+	// procurado = buscarNome("Richard Camacho Martin");
+	// printAluno(procurado);
+	// procurado = buscarNome("Ignacio Neal Margot");
+	// printAluno(procurado);
+	// procurado = buscarNome("Matthew Liu Kaufman");
+	// printAluno(procurado);
+	// procurado = buscarNome("Alfeu Mitchell Knox");
+	// printAluno(procurado);
 	
-	fim = clock();
-	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
+	// fim = clock();
+	// cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
 
 	
 	// char matricula[9];
