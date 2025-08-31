@@ -21,8 +21,8 @@ struct Aluno{
 };
 
 struct Alunos{ 
-    Aluno **tabelahash;
-    bool *ocupado;
+    Aluno** tabelahash;
+    bool* ocupado;
     int tamanhoAtual;
     int quantidade;
 };
@@ -41,6 +41,14 @@ void inicializa(){
         a.ocupado[i] = false;
     }
    
+}
+
+int numeroPrimo(int n) {
+    int primo = n;
+    for (int i = 2; i * i <= n; i++) {
+        if (primo % i == 0) primo++; // Encontrou um divisor, não é primo
+    }
+    return primo; // É primo
 }
 
 Aluno *lerAluno(){
@@ -70,6 +78,31 @@ int funcaoHash(const char* nome){
         novaPos = re_hash;
     }
     
+}
+
+void expandirHash(){
+    int tamanhoAntigo = a.tamanhoAtual;
+    a.tamanhoAtual = numeroPrimo(tamanhoAntigo * 2);
+    Aluno** tabelaHashAntiga = a.tabelahash;
+    bool* ocupadoAntigo = a.ocupado; 
+
+    a.tabelahash = new Aluno*[a.tamanhoAtual];
+    a.ocupado = new bool[a.tamanhoAtual];
+
+    for(int i = 0; i < a.tamanhoAtual; i++){
+        a.tabelahash[i] = NULL;
+        a.ocupado[i] = false;
+    }
+
+    for(int i = 0; i < tamanhoAntigo; i++){
+        if(tabelaHashAntiga[i] != NULL){
+            int pos = funcaoHash(tabelaHashAntiga[i]->nome);
+            a.tabelahash[pos] = tabelaHashAntiga[i];
+            a.ocupado[pos] = true;
+        }
+    }
+    delete[] tabelaHashAntiga;
+    delete[] ocupadoAntigo;
 }
 
 void lerDados( const char *nomeArquivo){
@@ -106,8 +139,10 @@ void lerDados( const char *nomeArquivo){
             delete novo;
             break;
         }
-	}
-    delete novo;			
+        if ((double)a.quantidade / a.tamanhoAtual > FATOR_CARGA) {
+        expandirHash();
+        }
+	}			
 	fclose(arquivo);
 	cout << "Leitura concluida. Total de alunos: " << count << "\n" << endl;
 }
