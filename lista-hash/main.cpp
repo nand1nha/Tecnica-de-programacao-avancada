@@ -45,10 +45,17 @@ void inicializa(){
 
 int numeroPrimo(int n) {
     int primo = n;
-    for (int i = 2; i * i <= n; i++) {
-        if (primo % i == 0) primo++; // Encontrou um divisor, não é primo
+    while (true) {
+        int divisores = 2; // 1 e a ele mesmo
+        for(int j = 2; j < primo; j++) {
+            if (primo % j == 0) divisores++; // Encontrou um divisor, não é primo
+
+        }
+        if (divisores == 2) { // É primo
+            return primo;
+        }
+        primo++;
     }
-    return primo; // É primo
 }
 
 Aluno *lerAluno(){
@@ -70,14 +77,13 @@ int funcaoHash(const char* nome){
     } else {
         int novaPos = 1 + (soma % (a.tamanhoAtual - 1));
         int re_hash = 0;
-        if(a.tabelahash[novaPos] == NULL) {
-            return novaPos;
+        while (a.tabelahash[novaPos] != NULL){
+            re_hash = (pos + novaPos) % a.tamanhoAtual;
+            pos = novaPos;
+            novaPos = re_hash;
         }
-        re_hash = (pos + novaPos) % a.tamanhoAtual;
-        pos = novaPos;
-        novaPos = re_hash;
+        return novaPos;
     }
-    
 }
 
 void expandirHash(){
@@ -140,7 +146,7 @@ void lerDados( const char *nomeArquivo){
             break;
         }
         if ((double)a.quantidade / a.tamanhoAtual > FATOR_CARGA) {
-        expandirHash();
+            expandirHash();
         }
 	}			
 	fclose(arquivo);
