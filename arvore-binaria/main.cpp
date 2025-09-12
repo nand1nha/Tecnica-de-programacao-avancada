@@ -26,6 +26,7 @@ struct Alunos{
 };
 
 Alunos a;
+int cont = 0;
 
 void inicializa(){
 	a.raiz = NULL;
@@ -38,22 +39,27 @@ void insere(Aluno *y){
     } else {
         Aluno *atual = a.raiz;
         bool inserido = false;
+        int nivelAtual = 0;
         while (!inserido) {
             if(strcmp(y->nome, atual->nome) == 0){
                 inserido = true; 
             } else{
                 if(strcmp(y->nome, atual->nome) < 0 && atual->esquerda == NULL){
                     atual->esquerda = y;
+                    cont++;
+                    printf("%d",nivelAtualEsq);
                     inserido = true;
                 } else if(strcmp(y->nome, atual->nome) > 0 && atual->direita == NULL){
                     atual->direita = y;
+                    cont++;
                     inserido = true;
                 } else{
                     if(strcmp(y->nome, atual->nome) < 0){
                         atual = atual->esquerda;
                     } else {
                         atual = atual->direita;
-                    }               }
+                    }               
+                }
             }
         }
     }
@@ -127,6 +133,7 @@ int main(){
 	
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
+    cout << "Adicionados: " << cont << "\n" << endl;
     cout << "Nivel maximo da arvore: " << a.nivelMaximo << "\n" << endl;
 
 	
