@@ -60,6 +60,8 @@ void insere(Aluno *y){
                     }               
                 }
             }
+			nivelAtual++;
+            if(nivelAtual > a.nivelMaximo) a.nivelMaximo = nivelAtual;
         }
     }
 }
