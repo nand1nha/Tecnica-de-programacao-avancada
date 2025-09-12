@@ -53,8 +53,7 @@ void insere(Aluno *y){
                         atual = atual->esquerda;
                     } else {
                         atual = atual->direita;
-                    }
-                }
+                    }               }
             }
         }
     }
@@ -118,28 +117,6 @@ void printAluno(Aluno *p){
 	return ;
 }
 
-void exibirAlunos(int pos) {
-    cout << "\n=== LISTA DE ALUNOS ===\n" << endl;
-    Aluno* atual = a.raiz;
-    int contador = 1;
-    
-    while (atual != NULL) {
-        printf("Aluno %d:\n", contador);
-        printf("  Matricula: %s\n", atual->matricula);
-        printf("  CPF: %s\n", atual->cpf);
-        printf("  Nome: %s\n", atual->nome);
-        printf("  Nota: %.2f\n", atual->nota);
-        printf("  Idade: %d\n", atual->idade);
-        printf("  Curso: %s\n", atual->curso);
-        printf("  Cidade: %s\n", atual->cidade);
-        printf("  ---\n");
-        
-        atual = atual->direita; // This should be changed to in-order traversal for proper BST display
-        contador++;
-    }
-    printf("Total: %d alunos\n\n",contador);
-}
-
 int main(){
 	inicializa();
 	cout << "=== SISTEMA DE LEITURA DE ALUNOS CSV ===\n\n" << endl;
@@ -150,6 +127,7 @@ int main(){
 	
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
+    cout << "Nivel maximo da arvore: " << a.nivelMaximo << "\n" << endl;
 
 	
 

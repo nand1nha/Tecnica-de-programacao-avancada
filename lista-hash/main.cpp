@@ -6,9 +6,11 @@
 #include <cstring>
 #include <ctime>
 #include <string>
+#include <string.h>
 #define TAMANHO_INICIAL 1021
 #define FATOR_CARGA 0.7
 using namespace std;
+int contador =0;
 
 struct Aluno{
     char matricula[9];
@@ -64,25 +66,26 @@ Aluno *lerAluno(){
 }
 
 int funcaoHash(const char* nome){
-    int soma = 0;
+	unsigned int soma = 0;
     int i = 0;
     while (nome[i]!= '\0')
     {
         soma += (int)nome[i];
         i++;
     }
+    soma = soma*soma*soma;
     int pos = soma % a.tamanhoAtual;
+    // cout<<soma<<endl;
     if(a.tabelahash[pos] == NULL) {
         return pos;
     } else {
+    	contador ++;
         int novaPos = 1 + (soma % (a.tamanhoAtual - 1));
-        int re_hash = 0;
-        while (a.tabelahash[novaPos] != NULL){
-            re_hash = (pos + novaPos) % a.tamanhoAtual;
-            pos = novaPos;
-            novaPos = re_hash;
+        while (a.tabelahash[pos] != NULL){
+        	contador++;
+            pos = (pos + novaPos) % a.tamanhoAtual;
         }
-        return novaPos;
+        return pos;
     }
 }
 
@@ -126,7 +129,7 @@ void lerDados( const char *nomeArquivo){
     }
 
 	Aluno* novo;
-	int count = 1;
+	int count = 0;
     while ((novo = new Aluno) != NULL) {
 
 		//if(count == 1000) break;
@@ -151,6 +154,33 @@ void lerDados( const char *nomeArquivo){
 	}			
 	fclose(arquivo);
 	cout << "Leitura concluida. Total de alunos: " << count << "\n" << endl;
+}
+
+int buscarNome(const char* nome){
+	unsigned int soma = 0;
+    int i = 0;
+    while (nome[i]!= '\0')
+    {
+        soma += (int)nome[i];
+        i++;
+    }
+    soma = soma*soma*soma;
+    int pos = soma % a.tamanhoAtual;
+    bool busca = true;
+    int novaPos = 1 + (soma % (a.tamanhoAtual - 1));
+    while(busca == true){
+		if(a.tabelahash[pos] != NULL){
+			if(strcmp(a.tabelahash[pos]->nome, nome) == 0){
+				return pos;
+			}
+		}else{
+			if(a.ocupado[pos] == false){
+				busca = false;
+			}
+		}
+		pos = (pos + novaPos) % a.tamanhoAtual;
+	}
+	return -1;
 }
 
 
@@ -206,6 +236,14 @@ int main(){
 	
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
+	cout<< contador<<endl;
+	int pos = buscarNome("Fernanda Silva");
+	if(pos != -1){
+		printAluno(pos);
+	}else{
+		cout<<"Aluno não existe"<<endl;
+	}
+	
 
 	
 
