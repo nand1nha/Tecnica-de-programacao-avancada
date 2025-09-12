@@ -47,7 +47,6 @@ void insere(Aluno *y){
                 if(strcmp(y->nome, atual->nome) < 0 && atual->esquerda == NULL){
                     atual->esquerda = y;
                     cont++;
-                    printf("%d",nivelAtualEsq);
                     inserido = true;
                 } else if(strcmp(y->nome, atual->nome) > 0 && atual->direita == NULL){
                     atual->direita = y;
