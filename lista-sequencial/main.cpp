@@ -7,6 +7,7 @@
 #include <ctime>
 #include <string>
 using namespace std;
+#define TAMANHO 2^20
 
 struct Aluno{
     char matricula[9];
@@ -27,6 +28,7 @@ struct Alunos{
 
 Alunos a;
 int cont = 0;
+Aluno *listaSequencial = new Aluno[TAMANHO];
 
 void inicializa(){
 	a.raiz = NULL;
@@ -66,6 +68,10 @@ void insere(Aluno *y){
     }
 }
 
+void insereLista(Aluno *y){
+    
+
+}
 
 Aluno *lerAluno(){
     Aluno *b = new Aluno;
