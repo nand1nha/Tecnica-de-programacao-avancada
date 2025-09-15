@@ -42,7 +42,7 @@ void insere(Aluno *y){
         int nivelAtual = 0;
         while (!inserido) {
             if(strcmp(y->nome, atual->nome) == 0){
-                inserido = true; 
+                return;
             } else{
                 if(strcmp(y->nome, atual->nome) < 0 && atual->esquerda == NULL){
                     atual->esquerda = y;

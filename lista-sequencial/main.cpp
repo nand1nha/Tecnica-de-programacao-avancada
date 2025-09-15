@@ -68,10 +68,7 @@ void insere(Aluno *y){
     }
 }
 
-void insereLista(Aluno *y){
-    
 
-}
 
 Aluno *lerAluno(){
     Aluno *b = new Aluno;
