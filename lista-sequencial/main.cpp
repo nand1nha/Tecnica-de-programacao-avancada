@@ -7,7 +7,7 @@
 #include <ctime>
 #include <string>
 using namespace std;
-#define TAMANHO 2^20
+#define TAMANHO (1 << 20)
 
 struct Aluno{
     char matricula[9];
@@ -22,53 +22,44 @@ struct Aluno{
 };
 
 struct Alunos{
-    Aluno *raiz;
-    int nivelMaximo;
+    Aluno** aluno;
+    int tamanho;
+    int quantidade;
 };
 
-Alunos a;
-int cont = 0;
-Aluno *listaSequencial = new Aluno[TAMANHO];
+Alunos listaSequencial;
+//Aluno *listaSequencial = new Aluno[TAMANHO];
 
 void inicializa(){
-	a.raiz = NULL;
-    a.nivelMaximo = 0;
+	listaSequencial.aluno = new Aluno*[TAMANHO];
+    listaSequencial.tamanho = TAMANHO;
+    listaSequencial.quantidade = 0;
+    for(int i = 0; i < TAMANHO; i++) listaSequencial.aluno[i] = NULL;
 }
 
-void insere(Aluno *y){
-    if(a.raiz == NULL){
-        a.raiz = y;
-    } else {
-        Aluno *atual = a.raiz;
-        bool inserido = false;
-        int nivelAtual = 0;
-        while (!inserido) {
-            if(strcmp(y->nome, atual->nome) == 0){
-                inserido = true; 
-            } else{
-                if(strcmp(y->nome, atual->nome) < 0 && atual->esquerda == NULL){
-                    atual->esquerda = y;
-                    cont++;
-                    inserido = true;
-                } else if(strcmp(y->nome, atual->nome) > 0 && atual->direita == NULL){
-                    atual->direita = y;
-                    cont++;
-                    inserido = true;
-                } else{
-                    if(strcmp(y->nome, atual->nome) < 0){
-                        atual = atual->esquerda;
-                    } else {
-                        atual = atual->direita;
-                    }               
-                }
-            }
-			nivelAtual++;
-            if(nivelAtual > a.nivelMaximo) a.nivelMaximo = nivelAtual;
+int insere(Aluno *y, int pos){
+    if(listaSequencial.quantidade >= listaSequencial.tamanho){
+        cout << "Lista cheia, nao e possivel inserir mais alunos." << endl;
+        return 1;
+    }
+    if(pos >= listaSequencial.tamanho){
+        cout << "Posicao invalida." << endl;
+        return 1;
+    }
+    if(listaSequencial.aluno[pos] == NULL){
+        listaSequencial.aluno[pos] = y;
+        listaSequencial.quantidade++;
+        return 0;
+    }else{
+        if(strcmp(y->nome, listaSequencial.aluno[pos]->nome) >= 0){
+            int direita = (2*pos) + 2;
+            return insere(y, direita);
+        }else{
+            int esquerda = (2*pos) + 1;
+            return insere(y, esquerda);
         }
     }
 }
-
-
 
 Aluno *lerAluno(){
     Aluno *b = new Aluno;
@@ -101,7 +92,10 @@ void lerDados( const char *nomeArquivo){
             novo->direita = NULL;
             novo->esquerda = NULL;
             count++;
-            insere(novo);
+            if(insere(novo,0) != 0){
+                delete novo;
+                break;
+            }
             
         } else {
             delete novo;
@@ -137,8 +131,7 @@ int main(){
 	
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
-    cout << "Adicionados: " << cont << "\n" << endl;
-    cout << "Nivel maximo da arvore: " << a.nivelMaximo << "\n" << endl;
+    cout << "Quantidade maxima: " << listaSequencial.quantidade << "\n" << endl;
 
 	
 
