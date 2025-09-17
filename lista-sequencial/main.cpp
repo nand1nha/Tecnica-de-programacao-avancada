@@ -43,8 +43,7 @@ int insere(Aluno *y, int pos){
         return 1;
     }
     if(pos >= listaSequencial.tamanho){
-        cout << "Posicao invalida." << endl;
-        return 1;
+        return 0;
     }
     if(listaSequencial.aluno[pos] == NULL){
         listaSequencial.aluno[pos] = y;
