@@ -97,7 +97,7 @@ Aluno* rotacaoDuplaDireita(Aluno* y){
 Aluno* insere(Aluno *y, Aluno *raizAtual){
     if(raizAtual == NULL){
         a.quantidade++;
-        return y;
+        return y;   
     }
     if(strcmp(y->nome, raizAtual->nome) >= 0){
         raizAtual->direita = insere(y, raizAtual->direita); 
@@ -105,6 +105,26 @@ Aluno* insere(Aluno *y, Aluno *raizAtual){
         raizAtual->esquerda = insere(y, raizAtual->esquerda);
     }
     atualizaAltura(raizAtual);
+
+    int balanceamento = (raizAtual->esquerda - raizAtual->direita);
+
+    if(balanceamento > 1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) >= 0){
+        return rotacaoSimplesDireita(raizAtual);
+    }
+    if(balanceamento < -1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) <= 0){
+        return rotacaoSimplesEsquerda(raizAtual);
+    }
+    if(balanceamento > 1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) < 0){
+        return rotacaoDuplaDireita(raizAtual);
+    }
+    if(balanceamento < -1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) > 0){
+        return rotacaoDuplaEsquerda(raizAtual);
+    }
+
+
+
+
+
     return raizAtual;
 }
 
