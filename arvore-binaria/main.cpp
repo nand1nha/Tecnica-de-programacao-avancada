@@ -23,6 +23,7 @@ struct Aluno{
 struct Alunos{
     Aluno *raiz;
     int nivelMaximo;
+    int quantidade;
 };
 
 Alunos a;
@@ -31,39 +32,23 @@ int cont = 0;
 void inicializa(){
 	a.raiz = NULL;
     a.nivelMaximo = 0;
+    a.quantidade = 0;
 }
 
-void insere(Aluno *y){
-    if(a.raiz == NULL){
-        a.raiz = y;
-    } else {
-        Aluno *atual = a.raiz;
-        bool inserido = false;
-        int nivelAtual = 0;
-        while (!inserido) {
-            if(strcmp(y->nome, atual->nome) == 0){
-                return;
-            } else{
-                if(strcmp(y->nome, atual->nome) < 0 && atual->esquerda == NULL){
-                    atual->esquerda = y;
-                    cont++;
-                    inserido = true;
-                } else if(strcmp(y->nome, atual->nome) > 0 && atual->direita == NULL){
-                    atual->direita = y;
-                    cont++;
-                    inserido = true;
-                } else{
-                    if(strcmp(y->nome, atual->nome) < 0){
-                        atual = atual->esquerda;
-                    } else {
-                        atual = atual->direita;
-                    }               
-                }
-            }
-			nivelAtual++;
-            if(nivelAtual > a.nivelMaximo) a.nivelMaximo = nivelAtual;
-        }
+Aluno* insere(Aluno *y, Aluno *raizAtual){
+    if(raizAtual == NULL){
+        a.quantidade++;
+        return y;
     }
+    cont++;
+    if(strcmp(y->nome, raizAtual->nome) >= 0){
+        raizAtual->direita = insere(y, raizAtual->direita); 
+    }else{
+        raizAtual->esquerda = insere(y, raizAtual->esquerda);
+    }
+    if(cont > a.nivelMaximo) a.nivelMaximo = cont;
+    cont = 0;
+    return raizAtual;
 }
 
 
@@ -98,7 +83,7 @@ void lerDados( const char *nomeArquivo){
             novo->direita = NULL;
             novo->esquerda = NULL;
             count++;
-            insere(novo);
+            a.raiz = insere(novo, a.raiz);
             
         } else {
             delete novo;
@@ -134,7 +119,7 @@ int main(){
 	
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
-    cout << "Adicionados: " << cont << "\n" << endl;
+    cout << "Adicionados: " << a.quantidade << "\n" << endl;
     cout << "Nivel maximo da arvore: " << a.nivelMaximo << "\n" << endl;
 
 	
