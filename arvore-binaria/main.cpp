@@ -106,7 +106,7 @@ Aluno* insere(Aluno *y, Aluno *raizAtual){
     }
     atualizaAltura(raizAtual);
 
-    int balanceamento = (raizAtual->esquerda - raizAtual->direita);
+    int balanceamento = (raizAtual->esquerda->altura - raizAtual->direita->altura);
 
     if(balanceamento > 1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) >= 0){
         return rotacaoSimplesDireita(raizAtual);
