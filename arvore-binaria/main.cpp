@@ -18,6 +18,7 @@ struct Aluno{
     char cidade[40];
     Aluno *direita;
     Aluno *esquerda;
+    int altura;
 };
 
 struct Alunos{
@@ -35,19 +36,75 @@ void inicializa(){
     a.quantidade = 0;
 }
 
+void atualizaAltura(Aluno *no){
+    int alturaEsquerda = 0;
+    int alturaDireita = 0;
+    if(no->esquerda == NULL){
+        alturaEsquerda = 0;
+    }else{
+        alturaEsquerda = 1 + no->esquerda->altura;
+    }
+    if(no->direita == NULL){
+        alturaDireita = 0;
+    }else{
+        alturaDireita = 1 + no->direita->altura;
+    }
+    no->altura = 1 + max(alturaEsquerda, alturaDireita);
+}
+
+Aluno* rotacaoSimplesDireita(Aluno* y){
+    Aluno *x = y->esq;
+    Aluno *T2 = x->dir;
+
+    x->dir = y;
+    y->esq = T2;
+
+    atualizaAltura(y);
+    atualizaAltura(x);
+
+    return x;
+}
+
+Aluno* rotacaoSimplesEsquerda(Aluno* y){
+    Aluno *x = y->dir;
+    Aluno *T2 = x->esq;
+
+    // Executa a rotação
+    x->esq  = y;
+    y->dir = T2;
+
+    // Atualiza alturas
+    atualizaAltura(y);
+    atualizaAltura(x);
+
+    // Novo nó raiz
+    return x;
+}
+
+Aluno* rotacaoDuplaEsquerda(Aluno* y){
+    // Primeiro uma rotação simples à direita em y->dir
+    y->dir = rotacaoSimplesDireita(y->dir);
+    // Depois rotação simples à esquerda em y
+    return rotacaoSimplesEsquerda(y);
+
+}
+
+Aluno* rotacaoDuplaDireita(Aluno* y){
+    y->esq = rotacaoSimplesEsquerda(y->esq);
+    return rotacaoSimplesDireita(y);
+}
+
 Aluno* insere(Aluno *y, Aluno *raizAtual){
     if(raizAtual == NULL){
         a.quantidade++;
         return y;
     }
-    cont++;
     if(strcmp(y->nome, raizAtual->nome) >= 0){
         raizAtual->direita = insere(y, raizAtual->direita); 
     }else{
         raizAtual->esquerda = insere(y, raizAtual->esquerda);
     }
-    if(cont > a.nivelMaximo) a.nivelMaximo = cont;
-    cont = 0;
+    atualizaAltura(raizAtual);
     return raizAtual;
 }
 
@@ -82,6 +139,7 @@ void lerDados( const char *nomeArquivo){
                    novo->matricula, novo->cpf, novo->nome, &novo->nota, &novo->idade, novo->curso, novo->cidade) == 7) {
             novo->direita = NULL;
             novo->esquerda = NULL;
+            novo->altura = 0;
             count++;
             a.raiz = insere(novo, a.raiz);
             
