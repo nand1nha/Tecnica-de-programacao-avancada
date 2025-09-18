@@ -106,18 +106,47 @@ Aluno* insere(Aluno *y, Aluno *raizAtual){
     }
     atualizaAltura(raizAtual);
 
-    int balanceamento = (raizAtual->esquerda->altura - raizAtual->direita->altura);
+    int alturaEsq;
+    int alturaDir;
+    int alturaEsqFilho;
+    int alturaDirFilho;
 
-    if(balanceamento > 1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) >= 0){
+    if(raizAtual->esquerda == NULL){
+        alturaEsq = 0;
+        alturaEsqFilho = 0;
+    }else{
+        alturaEsq = raizAtual->esquerda->altura;
+        if(raizAtual->esquerda->esquerda == NULL){
+            alturaEsqFilho = 0;
+        }else{
+            alturaEsqFilho = raizAtual->esquerda->esquerda->altura;
+        }
+    }
+    if(raizAtual->direita == NULL){
+        alturaDir = 0;
+        alturaDirFilho = 0;
+    }else{
+        alturaDir = raizAtual->direita->altura;
+        if(raizAtual->direita->direita == NULL){
+            alturaDirFilho = 0;
+        }else{
+            alturaDirFilho = raizAtual->direita->direita->altura;
+        }
+    }
+    
+    int balanceamento = (alturaEsq - alturaDir);
+    int balanceamentoFilho = (alturaEsqFilho - alturaDirFilho);
+
+    if(balanceamento > 1 && balanceamentoFilho >= 0){
         return rotacaoSimplesDireita(raizAtual);
     }
-    if(balanceamento < -1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) <= 0){
+    if(balanceamento < -1 && balanceamentoFilho <= 0){
         return rotacaoSimplesEsquerda(raizAtual);
     }
-    if(balanceamento > 1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) < 0){
+    if(balanceamento > 1 && balanceamentoFilho < 0){
         return rotacaoDuplaDireita(raizAtual);
     }
-    if(balanceamento < -1 && (raizAtual->esquerda->altura - raizAtual->direita->altura) > 0){
+    if(balanceamento < -1 && balanceamentoFilho > 0){
         return rotacaoDuplaEsquerda(raizAtual);
     }
 
@@ -194,7 +223,6 @@ int main(){
 	fim = clock();
 	cout << "Tempo de leitura: " << (int)fim - inicio << " milissegundos\n" << endl;
     cout << "Adicionados: " << a.quantidade << "\n" << endl;
-    cout << "Nivel maximo da arvore: " << a.nivelMaximo << "\n" << endl;
 
 	
 
