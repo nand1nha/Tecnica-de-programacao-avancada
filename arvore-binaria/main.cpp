@@ -121,10 +121,6 @@ Aluno* insere(Aluno *y, Aluno *raizAtual){
         return rotacaoDuplaEsquerda(raizAtual);
     }
 
-
-
-
-
     return raizAtual;
 }
 
