@@ -53,11 +53,11 @@ void atualizaAltura(Aluno *no){
 }
 
 Aluno* rotacaoSimplesDireita(Aluno* y){
-    Aluno *x = y->esq;
-    Aluno *T2 = x->dir;
+    Aluno *x = y->esquerda;
+    Aluno *T2 = x->direita;
 
-    x->dir = y;
-    y->esq = T2;
+    x->direita = y;
+    y->esquerda = T2;
 
     atualizaAltura(y);
     atualizaAltura(x);
@@ -66,12 +66,12 @@ Aluno* rotacaoSimplesDireita(Aluno* y){
 }
 
 Aluno* rotacaoSimplesEsquerda(Aluno* y){
-    Aluno *x = y->dir;
-    Aluno *T2 = x->esq;
+    Aluno *x = y->direita;
+    Aluno *T2 = x->esquerda;
 
     // Executa a rotação
-    x->esq  = y;
-    y->dir = T2;
+    x->esquerda  = y;
+    y->direita = T2;
 
     // Atualiza alturas
     atualizaAltura(y);
@@ -83,14 +83,14 @@ Aluno* rotacaoSimplesEsquerda(Aluno* y){
 
 Aluno* rotacaoDuplaEsquerda(Aluno* y){
     // Primeiro uma rotação simples à direita em y->dir
-    y->dir = rotacaoSimplesDireita(y->dir);
+    y->direita = rotacaoSimplesDireita(y->direita);
     // Depois rotação simples à esquerda em y
     return rotacaoSimplesEsquerda(y);
 
 }
 
 Aluno* rotacaoDuplaDireita(Aluno* y){
-    y->esq = rotacaoSimplesEsquerda(y->esq);
+    y->esquerda = rotacaoSimplesEsquerda(y->esquerda);
     return rotacaoSimplesDireita(y);
 }
 
