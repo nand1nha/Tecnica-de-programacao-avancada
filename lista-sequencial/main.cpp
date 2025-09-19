@@ -37,6 +37,21 @@ void inicializa(){
     for(int i = 0; i < TAMANHO; i++) listaSequencial.aluno[i] = NULL;
 }
 
+void atualizaAltura(int pos){
+	int alturaEsquerda = 0;
+	int alturaDireita = 0;
+	int posFilhoDireita = (2*pos)+2;
+	int posFilhoEsquerda = (2*pos)+1;
+	if(listaSequencial.aluno[posFilhoDireita] != NULL){
+		alturaDireita = 1 + lisSequencial.aluno[posFilhoDireita]->altura;
+	}
+	if(listaSequencial.aluno[posFilhoEsquerda] != NULL){
+		alturaEsquerda = 1 + listaSequencial.aluno[posFilhoEsquerda]->altura;
+	}
+	
+	listaSequencial.aluno[pos]->altura = max(alturaEsquerda,alturaDireita);
+}
+
 int insere(Aluno *y, int pos){
     if(listaSequencial.quantidade >= listaSequencial.tamanho){
         cout << "Lista cheia, nao e possivel inserir mais alunos." << endl;
@@ -48,6 +63,7 @@ int insere(Aluno *y, int pos){
     if(listaSequencial.aluno[pos] == NULL){
         listaSequencial.aluno[pos] = y;
         listaSequencial.quantidade++;
+		atualizaAltura(pos);
         return 0;
     }else{
         if(strcmp(y->nome, listaSequencial.aluno[pos]->nome) >= 0){
