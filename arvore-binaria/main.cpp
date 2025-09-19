@@ -49,7 +49,7 @@ void atualizaAltura(Aluno *no){
     }else{
         alturaDireita = 1 + no->direita->altura;
     }
-    no->altura = 1 + max(alturaEsquerda, alturaDireita);
+    no->altura = max(alturaEsquerda, alturaDireita);
 }
 
 Aluno* rotacaoSimplesDireita(Aluno* y){
