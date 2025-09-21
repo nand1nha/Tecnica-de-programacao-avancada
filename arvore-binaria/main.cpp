@@ -108,45 +108,50 @@ Aluno* insere(Aluno *y, Aluno *raizAtual){
 
     int alturaEsq;
     int alturaDir;
-    int alturaEsqFilho;
-    int alturaDirFilho;
+    int alturaEsqFilhoEsq;
+    int alturaEsqFilhoDir;
+    int alturaDirFilhoEsq;
+    int alturaDirFilhoDir;
 
     if(raizAtual->esquerda == NULL){
         alturaEsq = 0;
-        alturaEsqFilho = 0;
+        alturaEsqFilhoEsq = 0;
+        alturaEsqFilhoDir = 0;
     }else{
-        alturaEsq = raizAtual->esquerda->altura;
-        if(raizAtual->esquerda->esquerda == NULL){
-            alturaEsqFilho = 0;
-        }else{
-            alturaEsqFilho = raizAtual->esquerda->esquerda->altura;
+        alturaEsq = 1 + raizAtual->esquerda->altura;
+        if(raizAtual->esquerda->esquerda != NULL){
+            alturaEsqFilhoEsq = 1 + raizAtual->esquerda->esquerda->altura;
+        }
+        if(raizAtual->esquerda->direita != NULL){
+            alturaEsqFilhoDir = 1 + raizAtual->esquerda->direita->altura;
         }
     }
     if(raizAtual->direita == NULL){
         alturaDir = 0;
-        alturaDirFilho = 0;
+        alturaDirFilhoEsq = 0;
+        alturaDirFilhoDir = 0;
     }else{
-        alturaDir = raizAtual->direita->altura;
-        if(raizAtual->direita->direita == NULL){
-            alturaDirFilho = 0;
-        }else{
-            alturaDirFilho = raizAtual->direita->direita->altura;
+        alturaDir = 1 + raizAtual->direita->altura;
+        if(raizAtual->direita->direita != NULL){
+            alturaDirFilhoDir = 1 + raizAtual->direita->direita->altura;
+        }
+        if(raizAtual->direita->esquerda != NULL){
+            alturaDirFilhoEsq = 1 + raizAtual->direita->esquerda->altura;
         }
     }
     
     int balanceamento = (alturaEsq - alturaDir);
-    int balanceamentoFilho = (alturaEsqFilho - alturaDirFilho);
 
-    if(balanceamento > 1 && balanceamentoFilho >= 0){
+    if(balanceamento > 1 && (alturaEsqFilhoEsq-alturaEsqFilhoDir) >= 0){
         return rotacaoSimplesDireita(raizAtual);
     }
-    if(balanceamento < -1 && balanceamentoFilho <= 0){
+    if(balanceamento < -1 && (alturaDirFilhoEsq-alturaDirFilhoDir) <= 0){
         return rotacaoSimplesEsquerda(raizAtual);
     }
-    if(balanceamento > 1 && balanceamentoFilho < 0){
+    if(balanceamento > 1 && (alturaEsqFilhoEsq-alturaEsqFilhoDir) < 0){
         return rotacaoDuplaDireita(raizAtual);
     }
-    if(balanceamento < -1 && balanceamentoFilho > 0){
+    if(balanceamento < -1 && (alturaDirFilhoEsq-alturaDirFilhoDir) > 0){
         return rotacaoDuplaEsquerda(raizAtual);
     }
 
