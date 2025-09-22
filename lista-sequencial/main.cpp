@@ -64,9 +64,14 @@ void atualizaAltura(int pos)
 
 void rotacaoSimplesDireita(int pos)
 {
-    Aluno *x = listaSequencial.aluno[(2 * pos) + 1];
-    Aluno *T2 = listaSequencial.aluno[(2 * ((2 * pos) + 1)) + 2];
-
+    int posFilhoEsquerda = (2 * pos) + 1;
+    int posDirFilhoEsquerda = (2 * posFilhoEsquerda) + 2;
+    Aluno *T2 = NULL;
+    if(posDirFilhoEsquerda < listaSequencial.tamanho){
+        Aluno *T2 = listaSequencial.aluno[posDirFilhoEsquerda];
+    }
+    Aluno *x = listaSequencial.aluno[posFilhoEsquerda];
+    
     listaSequencial.aluno[(2 * pos) + 2] = listaSequencial.aluno[pos];
     listaSequencial.aluno[(2 * ((2 * pos) + 2)) + 1] = T2;
     listaSequencial.aluno[pos] = x;
@@ -77,8 +82,13 @@ void rotacaoSimplesDireita(int pos)
 
 void rotacaoSimplesEsquerda(int pos)
 {
-    Aluno *x = listaSequencial.aluno[(2 * pos) + 2];
-    Aluno *T2 = listaSequencial.aluno[(2 * ((2 * pos) + 2)) + 1];
+    int posFilhoDireita = (2 * pos) + 2;
+    int posEsqFilhoDireita = (2 * posFilhoDireita) + 1;
+    Aluno *T2 = NULL;
+    if(posEsqFilhoDireita < listaSequencial.tamanho){
+        Aluno *T2 = listaSequencial.aluno[posEsqFilhoDireita];
+    }
+    Aluno *x = listaSequencial.aluno[posFilhoDireita];
 
     // Executa a rotação
     listaSequencial.aluno[(2 * pos) + 1] = listaSequencial.aluno[pos];
@@ -163,11 +173,11 @@ Aluno* insere(Aluno *y, int pos)
     else
     {
         alturaDir = 1 + listaSequencial.aluno[(2 * pos) + 2]->altura;
-        if ((2 * posFilhoDireita) + 2 > listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoDireita) + 2] != NULL)
+        if ((2 * posFilhoDireita) + 2 <= listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoDireita) + 2] != NULL)
         {
             alturaDirFilhoDir = 1 + listaSequencial.aluno[(2 * posFilhoDireita) + 2]->altura;
         }
-        if ((2 * posFilhoDireita) + 2 > listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoDireita) + 1] != NULL)
+        if ((2 * posFilhoDireita) + 2 <= listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoDireita) + 1] != NULL)
         {
             alturaDirFilhoEsq = 1 + listaSequencial.aluno[(2 * posFilhoDireita) + 1]->altura;
         }
