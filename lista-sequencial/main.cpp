@@ -67,8 +67,8 @@ void rotacaoSimplesDireita(int pos)
     Aluno *x = listaSequencial.aluno[(2 * pos) + 1];
     Aluno *T2 = listaSequencial.aluno[(2 * ((2 * pos) + 1)) + 2];
 
-    listaSequencial.aluno[(2 * ((2 * pos) + 1)) + 2] = listaSequencial.aluno[pos];
-    listaSequencial.aluno[(2 * pos) + 1] = T2;
+    listaSequencial.aluno[(2 * pos) + 2] = listaSequencial.aluno[pos];
+    listaSequencial.aluno[(2 * ((2 * pos) + 2)) + 1] = T2;
     listaSequencial.aluno[pos] = x;
 
     atualizaAltura((2 * pos) + 1);
@@ -81,12 +81,12 @@ void rotacaoSimplesEsquerda(int pos)
     Aluno *T2 = listaSequencial.aluno[(2 * ((2 * pos) + 2)) + 1];
 
     // Executa a rotação
-    listaSequencial.aluno[(2 * ((2 * pos) + 2)) + 1] = listaSequencial.aluno[pos];
-    listaSequencial.aluno[(2 * pos) + 2] = T2;
+    listaSequencial.aluno[(2 * pos) + 1] = listaSequencial.aluno[pos];
+    listaSequencial.aluno[(2 * ((2 * pos) + 1)) + 2] = T2;
     listaSequencial.aluno[pos] = x;
 
     // Atualiza alturas
-    atualizaAltura((2 * pos) + 2);
+    atualizaAltura((2 * pos) + 1);
     atualizaAltura(pos);
 }
 
