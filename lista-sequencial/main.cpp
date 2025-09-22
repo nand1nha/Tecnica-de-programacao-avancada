@@ -36,8 +36,9 @@ void inicializa()
     listaSequencial.aluno = new Aluno *[TAMANHO];
     listaSequencial.tamanho = TAMANHO;
     listaSequencial.quantidade = 0;
-    for (int i = 0; i < TAMANHO; i++)
+    for (int i = 0; i < TAMANHO; i++){
         listaSequencial.aluno[i] = NULL;
+    }
 }
 
 void atualizaAltura(int pos)
@@ -103,26 +104,24 @@ void rotacaoDuplaDireita(int pos)
     rotacaoSimplesDireita(pos);
 }
 
-void insere(Aluno *y, int pos)
+Aluno* insere(Aluno *y, int pos)
 {
     if (listaSequencial.aluno[pos] == NULL)
     {
-        printf("Inserido %s na posicao %d\n", y->nome, pos);
-        listaSequencial.aluno[pos] = y;
-        printf("Inserido %s na posicao %d\n", y->nome, pos);
         listaSequencial.quantidade++;
+        return y;
     }
     else
     {
         if (strcmp(y->nome, listaSequencial.aluno[pos]->nome) >= 0)
         {
             int direita = (2 * pos) + 2;
-            insere(y, direita);
+            listaSequencial.aluno[direita] = insere(y, direita);
         }
         else
         {
             int esquerda = (2 * pos) + 1;
-            insere(y, esquerda);
+            listaSequencial.aluno[esquerda] = insere(y, esquerda);
         }
     }
 
@@ -137,7 +136,7 @@ void insere(Aluno *y, int pos)
     int posFilhoEsquerda = (2 * pos) + 1;
     int posFilhoDireita = (2 * pos) + 2;
 
-    if (listaSequencial.aluno[(2 * pos) + 1] == NULL || (2 * pos) + 1 > listaSequencial.tamanho)
+    if (listaSequencial.aluno[(2 * pos) + 1] == NULL || (2 * pos) + 1 >= listaSequencial.tamanho)
     {
         alturaEsq = 0;
         alturaEsqFilhoEsq = 0;
@@ -155,7 +154,7 @@ void insere(Aluno *y, int pos)
             alturaEsqFilhoDir = 1 + listaSequencial.aluno[(2 * posFilhoEsquerda) + 2]->altura;
         }
     }
-    if (listaSequencial.aluno[(2 * pos) + 2] == NULL || (2 * pos) + 2 > listaSequencial.tamanho)
+    if (listaSequencial.aluno[(2 * pos) + 2] == NULL || (2 * pos) + 2 >= listaSequencial.tamanho)
     {
         alturaDir = 0;
         alturaDirFilhoEsq = 0;
@@ -180,7 +179,7 @@ void insere(Aluno *y, int pos)
     {
         rotacaoSimplesDireita(pos);
     }
-    if (balanceamento < 1 && (alturaDirFilhoEsq - alturaDirFilhoDir) <= 0)
+    if (balanceamento < -1 && (alturaDirFilhoEsq - alturaDirFilhoDir) <= 0)
     {
         rotacaoSimplesEsquerda(pos);
     }
@@ -188,11 +187,11 @@ void insere(Aluno *y, int pos)
     {
         rotacaoDuplaDireita(pos);
     }
-    if (balanceamento < 1 && (alturaDirFilhoEsq - alturaDirFilhoDir) > 0)
+    if (balanceamento < -1 && (alturaDirFilhoEsq - alturaDirFilhoDir) > 0)
     {
         rotacaoDuplaEsquerda(pos);
     }
-    return;
+    return listaSequencial.aluno[pos];
 }
 
 Aluno *lerAluno()
@@ -232,7 +231,7 @@ void lerDados(const char *nomeArquivo)
         {
             novo->altura = 0;
             count++;
-            insere(novo, 0);
+            listaSequencial.aluno[0] = insere(novo, 0);
         }
         else
         {
