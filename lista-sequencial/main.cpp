@@ -46,13 +46,16 @@ void atualizaAltura(int pos)
     int alturaDireita = 0;
     int posFilhoDireita = (2 * pos) + 2;
     int posFilhoEsquerda = (2 * pos) + 1;
-    if (listaSequencial.aluno[posFilhoDireita] != NULL && posFilhoDireita <= listaSequencial.tamanho)
+    if (posFilhoDireita < listaSequencial.tamanho && posFilhoEsquerda < listaSequencial.tamanho)
     {
-        alturaDireita = 1 + listaSequencial.aluno[posFilhoDireita]->altura;
-    }
-    if (listaSequencial.aluno[posFilhoEsquerda] != NULL && posFilhoEsquerda <= listaSequencial.tamanho)
-    {
-        alturaEsquerda = 1 + listaSequencial.aluno[posFilhoEsquerda]->altura;
+        if (listaSequencial.aluno[posFilhoDireita] != NULL)
+        {
+            alturaDireita = 1 + listaSequencial.aluno[posFilhoDireita]->altura;
+        }
+        if (listaSequencial.aluno[posFilhoEsquerda] != NULL)
+        {
+            alturaEsquerda = 1 + listaSequencial.aluno[posFilhoEsquerda]->altura;
+        }
     }
 
     listaSequencial.aluno[pos]->altura = max(alturaEsquerda, alturaDireita);
@@ -100,98 +103,96 @@ void rotacaoDuplaDireita(int pos)
     rotacaoSimplesDireita(pos);
 }
 
-int insere(Aluno *y, int pos)
+void insere(Aluno *y, int pos)
 {
-    if (pos >= listaSequencial.tamanho)
-    {
-        return 1;
-    }
     if (listaSequencial.aluno[pos] == NULL)
     {
+        printf("Inserido %s na posicao %d\n", y->nome, pos);
         listaSequencial.aluno[pos] = y;
+        printf("Inserido %s na posicao %d\n", y->nome, pos);
         listaSequencial.quantidade++;
-
-        atualizaAltura(pos);
-
-        int alturaEsq;
-        int alturaDir;
-        int alturaEsqFilhoEsq;
-        int alturaEsqFilhoDir;
-        int alturaDirFilhoEsq;
-        int alturaDirFilhoDir;
-        int posFilhoEsquerda = (2 * pos) + 1;
-        int posFilhoDireita = (2 * pos) + 2;
-
-        if (listaSequencial.aluno[(2 * pos) + 1] == NULL || (2 * pos) + 1 > listaSequencial.tamanho)
-        {
-            alturaEsq = 0;
-            alturaEsqFilhoEsq = 0;
-            alturaEsqFilhoDir = 0;
-        }
-        else
-        {
-            alturaEsq = 1 + listaSequencial.aluno[(2 * pos) + 1]->altura;
-            if ((2 * posFilhoEsquerda) + 1 <= listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoEsquerda) + 1] != NULL)
-            {
-                alturaEsqFilhoEsq = 1 + listaSequencial.aluno[(2 * posFilhoEsquerda) + 1]->altura;
-            }
-            if ((2 * posFilhoEsquerda) + 2 <= listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoEsquerda) + 2] != NULL )
-            {
-                alturaEsqFilhoDir = 1 + listaSequencial.aluno[(2 * posFilhoEsquerda) + 2]->altura;
-            }
-        }
-        if (listaSequencial.aluno[(2 * pos) + 2] == NULL || (2 * pos) + 2 > listaSequencial.tamanho)
-        {
-            alturaDir = 0;
-            alturaDirFilhoEsq = 0;
-            alturaDirFilhoDir = 0;
-        }
-        else
-        {
-            alturaDir = 1 + listaSequencial.aluno[(2 * pos) + 2]->altura;
-            if ((2 * posFilhoDireita) + 2 > listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoDireita) + 2] != NULL)
-            {
-                alturaDirFilhoDir = 1 + listaSequencial.aluno[(2 * posFilhoDireita) + 2]->altura;
-            }
-            if ((2 * posFilhoDireita) + 2 > listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoDireita) + 1] != NULL)
-            {
-                alturaDirFilhoEsq = 1 + listaSequencial.aluno[(2 * posFilhoDireita) + 1]->altura;
-            }
-        }
-
-        int balanceamento = (alturaEsq - alturaDir);
-
-        if (balanceamento > 1 && (alturaEsqFilhoEsq - alturaEsqFilhoDir) >= 0)
-        {
-            rotacaoSimplesDireita(pos);
-        }
-        if (balanceamento < 1 && (alturaDirFilhoEsq - alturaDirFilhoDir) <= 0)
-        {
-            rotacaoSimplesEsquerda(pos);
-        }
-        if (balanceamento > 1 && (alturaEsqFilhoEsq - alturaEsqFilhoDir) < 0)
-        {
-            rotacaoDuplaDireita(pos);
-        }
-        if (balanceamento < 1 && (alturaDirFilhoEsq - alturaDirFilhoDir) > 0)
-        {
-            rotacaoDuplaEsquerda(pos);
-        }
-        return 0;
     }
     else
     {
         if (strcmp(y->nome, listaSequencial.aluno[pos]->nome) >= 0)
         {
             int direita = (2 * pos) + 2;
-            return insere(y, direita);
+            insere(y, direita);
         }
         else
         {
             int esquerda = (2 * pos) + 1;
-            return insere(y, esquerda);
+            insere(y, esquerda);
         }
     }
+
+    atualizaAltura(pos);
+
+    int alturaEsq;
+    int alturaDir;
+    int alturaEsqFilhoEsq;
+    int alturaEsqFilhoDir;
+    int alturaDirFilhoEsq;
+    int alturaDirFilhoDir;
+    int posFilhoEsquerda = (2 * pos) + 1;
+    int posFilhoDireita = (2 * pos) + 2;
+
+    if (listaSequencial.aluno[(2 * pos) + 1] == NULL || (2 * pos) + 1 > listaSequencial.tamanho)
+    {
+        alturaEsq = 0;
+        alturaEsqFilhoEsq = 0;
+        alturaEsqFilhoDir = 0;
+    }
+    else
+    {
+        alturaEsq = 1 + listaSequencial.aluno[(2 * pos) + 1]->altura;
+        if ((2 * posFilhoEsquerda) + 1 <= listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoEsquerda) + 1] != NULL)
+        {
+            alturaEsqFilhoEsq = 1 + listaSequencial.aluno[(2 * posFilhoEsquerda) + 1]->altura;
+        }
+        if ((2 * posFilhoEsquerda) + 2 <= listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoEsquerda) + 2] != NULL)
+        {
+            alturaEsqFilhoDir = 1 + listaSequencial.aluno[(2 * posFilhoEsquerda) + 2]->altura;
+        }
+    }
+    if (listaSequencial.aluno[(2 * pos) + 2] == NULL || (2 * pos) + 2 > listaSequencial.tamanho)
+    {
+        alturaDir = 0;
+        alturaDirFilhoEsq = 0;
+        alturaDirFilhoDir = 0;
+    }
+    else
+    {
+        alturaDir = 1 + listaSequencial.aluno[(2 * pos) + 2]->altura;
+        if ((2 * posFilhoDireita) + 2 > listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoDireita) + 2] != NULL)
+        {
+            alturaDirFilhoDir = 1 + listaSequencial.aluno[(2 * posFilhoDireita) + 2]->altura;
+        }
+        if ((2 * posFilhoDireita) + 2 > listaSequencial.tamanho && listaSequencial.aluno[(2 * posFilhoDireita) + 1] != NULL)
+        {
+            alturaDirFilhoEsq = 1 + listaSequencial.aluno[(2 * posFilhoDireita) + 1]->altura;
+        }
+    }
+
+    int balanceamento = (alturaEsq - alturaDir);
+
+    if (balanceamento > 1 && (alturaEsqFilhoEsq - alturaEsqFilhoDir) >= 0)
+    {
+        rotacaoSimplesDireita(pos);
+    }
+    if (balanceamento < 1 && (alturaDirFilhoEsq - alturaDirFilhoDir) <= 0)
+    {
+        rotacaoSimplesEsquerda(pos);
+    }
+    if (balanceamento > 1 && (alturaEsqFilhoEsq - alturaEsqFilhoDir) < 0)
+    {
+        rotacaoDuplaDireita(pos);
+    }
+    if (balanceamento < 1 && (alturaDirFilhoEsq - alturaDirFilhoDir) > 0)
+    {
+        rotacaoDuplaEsquerda(pos);
+    }
+    return;
 }
 
 Aluno *lerAluno()
