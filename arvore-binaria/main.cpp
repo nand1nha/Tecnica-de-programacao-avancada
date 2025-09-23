@@ -158,6 +158,94 @@ Aluno* insere(Aluno *y, Aluno *raizAtual){
     return raizAtual;
 }
 
+Aluno *excluir(Aluno *y, Aluno *raizAtual){
+    if(raizAtual == NULL){
+        return raizAtual;
+    }
+    if(strcmp(y->nome, raizAtual->nome) > 0){
+        raizAtual->direita = excluir(y, raizAtual->direita);
+    }
+    if(strcmp(y->nome, raizAtual->nome) < 0){
+        raizAtual->esquerda = excluir(y, raizAtual->esquerda);
+    }
+    if(strcmp(y->nome, raizAtual->nome) == 0){
+        if((raizAtual->esquerda == NULL) && (raizAtual->direita == NULL)){
+            delete raizAtual;
+            a.quantidade--;
+            return NULL;
+        }
+        if(raizAtual->esquerda == NULL && raizAtual->direita != NULL){
+            Aluno *temp = raizAtual->direita;
+            delete raizAtual;
+            a.quantidade--;
+            return temp;
+
+        }
+        if(raizAtual->esquerda != NULL){
+            Aluno *temp = raizAtual->esquerda;
+            delete raizAtual;
+            a.quantidade--;
+
+
+            return temp;
+        }
+    }
+
+    atualizaAltura(raizAtual);
+
+    int alturaEsq;
+    int alturaDir;
+    int alturaEsqFilhoEsq;
+    int alturaEsqFilhoDir;
+    int alturaDirFilhoEsq;
+    int alturaDirFilhoDir;
+
+    if(raizAtual->esquerda == NULL){
+        alturaEsq = 0;
+        alturaEsqFilhoEsq = 0;
+        alturaEsqFilhoDir = 0;
+    }else{
+        alturaEsq = 1 + raizAtual->esquerda->altura;
+        if(raizAtual->esquerda->esquerda != NULL){
+            alturaEsqFilhoEsq = 1 + raizAtual->esquerda->esquerda->altura;
+        }
+        if(raizAtual->esquerda->direita != NULL){
+            alturaEsqFilhoDir = 1 + raizAtual->esquerda->direita->altura;
+        }
+    }
+    if(raizAtual->direita == NULL){
+        alturaDir = 0;
+        alturaDirFilhoEsq = 0;
+        alturaDirFilhoDir = 0;
+    }else{
+        alturaDir = 1 + raizAtual->direita->altura;
+        if(raizAtual->direita->direita != NULL){
+            alturaDirFilhoDir = 1 + raizAtual->direita->direita->altura;
+        }
+        if(raizAtual->direita->esquerda != NULL){
+            alturaDirFilhoEsq = 1 + raizAtual->direita->esquerda->altura;
+        }
+    }
+    
+    int balanceamento = (alturaEsq - alturaDir);
+
+    if(balanceamento > 1 && (alturaEsqFilhoEsq-alturaEsqFilhoDir) >= 0){
+        return rotacaoSimplesDireita(raizAtual);
+    }
+    if(balanceamento < -1 && (alturaDirFilhoEsq-alturaDirFilhoDir) <= 0){
+        return rotacaoSimplesEsquerda(raizAtual);
+    }
+    if(balanceamento > 1 && (alturaEsqFilhoEsq-alturaEsqFilhoDir) < 0){
+        return rotacaoDuplaDireita(raizAtual);
+    }
+    if(balanceamento < -1 && (alturaDirFilhoEsq-alturaDirFilhoDir) > 0){
+        return rotacaoDuplaEsquerda(raizAtual);
+    }
+
+    return raizAtual;
+
+}
+
 
 Aluno *lerAluno(){
     Aluno *b = new Aluno;
