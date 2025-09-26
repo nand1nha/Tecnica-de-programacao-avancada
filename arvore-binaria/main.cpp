@@ -394,6 +394,9 @@ int main()
          << endl;
     cout << "Adicionados: " << a.quantidade << "\n"
          << endl;
+        
+    a.nivelMaximo = a.raiz->altura;
+    cout << "Nivel maximo da arvore: " << a.nivelMaximo << endl;
 
     system("pause");
 }
