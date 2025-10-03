@@ -8,6 +8,8 @@
 #include <string>
 using namespace std;
 
+
+
 int main()
 {
     int tipo;
@@ -25,6 +27,20 @@ int main()
     case 1:
         cout << "Grafo direcionado" << endl;
         cout << "Tamanho do grafo: " << tamanho << endl;
+        int *acesso = new int[tamanho];
+        int **matriz = new int *[tamanho];
+        for (int i = 0; i < tamanho; i++)
+        {
+            matriz[i] = new int[tamanho];
+            for(int j = 0; j < tamanho; j++) {
+                matriz[i][j] = 0; 
+            }
+        }
+
+        for (int i = 0; i < tamanho; i++){
+            delete[] matriz[i];
+        }
+        delete[] matriz;
         break;
     case 2:
         cout << "Grafo não direcionado" << endl;
