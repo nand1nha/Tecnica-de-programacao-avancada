@@ -16,7 +16,7 @@ int main()
     int tamanho;
     cout << "--- Tipo de grafo ---" << endl;
     cout << "1 - Direcionado" << endl;
-    cout << "2 - Não direcionado" << endl;
+    cout << "2 - NÃ£o direcionado" << endl;
     cout << "--------------------" << endl;
     cout << "Escolha o tipo de grafo: " << endl;
     cin >> tipo;
@@ -36,6 +36,20 @@ int main()
                 matriz[i][j] = 0; 
             }
         }
+        
+        int arestas = tamanho/2;
+        int cont = 0;
+        while( cont <= arestas){
+			int x = rand()%tamanho;
+			int y = rand()%tamanho;
+			if(x != y){
+				if(matriz[x][y] == 0){
+					matriz[x][y] = 1;
+					matriz[y][x] = 1;
+					cont++;
+				}
+			}	
+		}
 
         for (int i = 0; i < tamanho; i++){
             delete[] matriz[i];
@@ -43,11 +57,11 @@ int main()
         delete[] matriz;
         break;
     case 2:
-        cout << "Grafo não direcionado" << endl;
+        cout << "Grafo nÃ£o direcionado" << endl;
         cout << "Tamanho do grafo: " << tamanho << endl;
         break;
     default:
-        cout << "Opção tipo de grafico inválida" << endl;
+        cout << "OpÃ§Ã£o tipo de grafico invÃ¡lida" << endl;
     }
     return 0;
 }
