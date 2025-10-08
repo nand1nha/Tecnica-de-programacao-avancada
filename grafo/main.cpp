@@ -8,6 +8,14 @@
 #include <string>
 using namespace std;
 
+void grafoConexo(int **matriz, int tamanho){
+	int *acesso = new int[tamanho];
+	for(int i = 0; i < tamanho; i++){
+		acesso[i] = 0;
+	}
+	
+}
+
 int **criarMatriz(int tamanho)
 {
     int **matriz = new int *[tamanho];
@@ -24,7 +32,6 @@ int **criarMatriz(int tamanho)
 
 void criaGrafoNaoDirecionado(int tamanho)
 {
-    int *acesso = new int[tamanho];
     int **matriz = criarMatriz(tamanho);
 
     int arestas = ((tamanho * tamanho) / 2) - tamanho;
@@ -43,6 +50,7 @@ void criaGrafoNaoDirecionado(int tamanho)
             }
         }
     }
+    
 
     ofstream arquivo("grafo.dot");
     if (arquivo.is_open())
@@ -80,7 +88,6 @@ void criaGrafoNaoDirecionado(int tamanho)
 
 void criaGrafoDirecionado(int tamanho)
 {
-    int *acesso = new int[tamanho];
     int **matriz = criarMatriz(tamanho);
 
     int arestas = ((tamanho * tamanho) / 2);
@@ -113,7 +120,7 @@ void criaGrafoDirecionado(int tamanho)
             {
                 if (matriz[i][j] == 1)
                 {
-                    arquivo << "  " << i << " -> " << j << ";" << endl;
+                    arquivo << "  " << i << " -- " << j << ";" << endl;
                 }
             }
         }
@@ -133,20 +140,27 @@ void criaGrafoDirecionado(int tamanho)
     delete[] matriz;
 }
 
-void lerArquivoDOT(const string nomeArquivo){
+void lerArquivoDOT(){
     int vertices = -1;
-    ifstream arquivo(nomeArquivo);
+    ifstream arquivo("grafo.dot");
     if (!arquivo.is_open()) {
-        cout << "Erro ao abrir o arquivo: " << nomeArquivo << endl;
+        cout << "Erro ao abrir o arquivo: " <<endl;
         return;
     }
     string linha;
+    int x;
+    int y;
+    int **matriz;
     while (getline(arquivo, linha)) {
         cout << linha << endl;
         vertices++;
         if (linha.find("-") != string::npos) {
-            int **matriz = criarMatriz(vertices);
+            matriz = criarMatriz(vertices);
         }
+        if(scanf(linha,"%d--%d",&x,&y) == 2){
+			matriz[x][y] = 1;
+		}
+        
     }
     
     arquivo.close();
@@ -157,7 +171,7 @@ int main()
     int tipo;
     int tamanho;
     cout << "--- Tipo de grafo ---" << endl;
-    cout << "1 - Não direcionado" << endl;
+    cout << "1 - NÃ£o direcionado" << endl;
     cout << "2 - Direcionado" << endl;
     cout << "--------------------" << endl;
     cout << "Escolha o tipo de grafo: " << endl;
@@ -167,7 +181,7 @@ int main()
 
     if (tipo == 1)
     {
-        cout << "Grafo não direcionado" << endl;
+        cout << "Grafo nÃ£o direcionado" << endl;
         cout << "Tamanho do grafo: " << tamanho << endl;
 
         criaGrafoNaoDirecionado(tamanho);
@@ -181,10 +195,10 @@ int main()
     }
     else
     {
-        cout << "OpÃ§Ã£o tipo de grafico invÃ¡lida" << endl;
+        cout << "OpÃƒÂ§ÃƒÂ£o tipo de grafico invÃƒÂ¡lida" << endl;
     }
 
-    lerArquivoDOT("grafo.dot");
+    lerArquivoDOT();
 
     return 0;
 }
