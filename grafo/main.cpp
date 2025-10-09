@@ -13,6 +13,27 @@ void grafoConexo(int **matriz, int tamanho){
 	for(int i = 0; i < tamanho; i++){
 		acesso[i] = 0;
 	}
+    acesso[0] = 1;
+    for(int i = 0; i < tamanho; i++){
+        if(acesso[i] == 1){
+           for(int j = 0; j < tamanho; j++){
+                if(matriz[i][j] == 1){
+                    acesso[j] = 1;
+                }
+            }
+        }
+        
+    }
+
+    for(int i = 0; i < tamanho; i++){
+        if(acesso[i] == 0){
+            cout << "Grafo nÃ£o conexo" << endl;
+            delete[] acesso;
+            return;
+        }
+    }
+    cout << "Grafo conexo" << endl;
+    delete[] acesso;
 	
 }
 
@@ -30,13 +51,13 @@ int **criarMatriz(int tamanho)
     return matriz;
 }
 
-void criaGrafoNaoDirecionado(int tamanho)
+void criaGrafoNaoDirecionado(int tamanho, int porcentagem)
 {
     int **matriz = criarMatriz(tamanho);
-
-    int arestas = ((tamanho * tamanho) / 2) - tamanho;
+    int arestaTotal = (tamanho * (tamanho - 1)) / 2;
+    int arestas = (arestaTotal*porcentagem)/100;
     int cont = 0;
-    while (cont <= arestas)
+    while (cont < arestas)
     {
         int x = rand() % tamanho;
         int y = rand() % tamanho;
@@ -62,7 +83,7 @@ void criaGrafoNaoDirecionado(int tamanho)
         }
         for (int i = 0; i < tamanho; i++)
         {
-            for (int j = i; j < tamanho; j++)
+            for (int j = 0; j < tamanho; j++)
             {
                 if (matriz[i][j] == 1)
                 {
@@ -79,6 +100,8 @@ void criaGrafoNaoDirecionado(int tamanho)
         cout << "Erro ao criar o arquivo" << endl;
     }
 
+    grafoConexo(matriz,tamanho);
+
     for (int i = 0; i < tamanho; i++)
     {
         delete[] matriz[i];
@@ -86,18 +109,19 @@ void criaGrafoNaoDirecionado(int tamanho)
     delete[] matriz;
 }
 
-void criaGrafoDirecionado(int tamanho)
+void criaGrafoDirecionado(int tamanho, int porcentagem)
 {
     int **matriz = criarMatriz(tamanho);
-
-    int arestas = ((tamanho * tamanho) / 2);
+    int arestasTotal = (tamanho * (tamanho - 1));
+    int arestas = (arestasTotal*porcentagem)/100;
     int cont = 0;
-    while (cont <= arestas)
+    while (cont < arestas)
     {
         int x = rand() % tamanho;
         int y = rand() % tamanho;
         if (x != y)
         {
+
             if (matriz[x][y] == 0)
             {
                 matriz[x][y] = 1;
@@ -116,7 +140,7 @@ void criaGrafoDirecionado(int tamanho)
         }
         for (int i = 0; i < tamanho; i++)
         {
-            for (int j = i; j < tamanho; j++)
+            for (int j = 0; j < tamanho; j++)
             {
                 if (matriz[i][j] == 1)
                 {
@@ -132,6 +156,8 @@ void criaGrafoDirecionado(int tamanho)
     {
         cout << "Erro ao criar o arquivo" << endl;
     }
+
+    grafoConexo(matriz,tamanho);
 
     for (int i = 0; i < tamanho; i++)
     {
@@ -157,7 +183,7 @@ void lerArquivoDOT(){
         if (linha.find("-") != string::npos) {
             matriz = criarMatriz(vertices);
         }
-        if(scanf(linha,"%d--%d",&x,&y) == 2){
+        if(sscanf(linha.c_str(),"%d--%d;",&x,&y) == 2){
 			matriz[x][y] = 1;
 		}
         
@@ -170,6 +196,7 @@ int main()
 {
     int tipo;
     int tamanho;
+    int porcentagem;
     cout << "--- Tipo de grafo ---" << endl;
     cout << "1 - NÃ£o direcionado" << endl;
     cout << "2 - Direcionado" << endl;
@@ -178,20 +205,24 @@ int main()
     cin >> tipo;
     cout << "Tamanho do grafo (quantidade de vertices): " << endl;
     cin >> tamanho;
+    cout << "Porcentagem de preenchimento (0 a 100): " << endl;
+    cin >> porcentagem;
 
     if (tipo == 1)
     {
         cout << "Grafo nÃ£o direcionado" << endl;
         cout << "Tamanho do grafo: " << tamanho << endl;
+        cout << "Porcentagem de preenchimento: " << porcentagem << "%" << endl;
 
-        criaGrafoNaoDirecionado(tamanho);
+        criaGrafoNaoDirecionado(tamanho, porcentagem);
     }
     else if (tipo == 2)
     {
         cout << "Grafo direcionado" << endl;
         cout << "Tamanho do grafo: " << tamanho << endl;
+        cout << "Porcentagem de preenchimento: " << porcentagem << "%" << endl;
 
-        criaGrafoDirecionado(tamanho);
+        criaGrafoDirecionado(tamanho, porcentagem);
     }
     else
     {
