@@ -80,7 +80,7 @@ void gerarArquivoDOT(int tamanho){
         }
         for (int i = 0; i < tamanho; i++){
             Vizinho *aux = grafo[i].vizinhos;
-            while (aux != NULL){
+            while (aux != NULL && i < aux->vizinho->id){
                 arquivo << "  " << i << " -- " << aux->vizinho->id << ";" << endl;
                 aux = aux->proximoVizinho;
             }
