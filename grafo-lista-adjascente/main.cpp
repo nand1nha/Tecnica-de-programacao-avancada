@@ -6,6 +6,11 @@
 #include <cstring>
 #include <ctime>
 #include <string>
+#include <utility>
+#include <algorithm>
+#include <random>
+#include <iterator>
+#include <vector> 
 using namespace std;
 
 struct Vertice;
@@ -29,9 +34,7 @@ void inicializa(int tamanho){
     }
 }
 
-//nao direcionado
-//falar que o B é vizinho de A
-void adicionaVizinho(Vertice *a, Vertice *b){
+void adicionaVizinhoNaoDirecionado(Vertice *a, Vertice *b){
     if (a == NULL || b == NULL)
         return;
     Vizinho *aux;
@@ -69,7 +72,28 @@ void adicionaVizinho(Vertice *a, Vertice *b){
     }
 }
 
-void gerarArquivoDOT(int tamanho){
+void adicionaVizinhoDirecionado(Vertice *a, Vertice *b){
+    if (a == NULL || b == NULL)
+        return;
+    Vizinho *aux;
+    if(a->vizinhos == NULL){
+        Vizinho *temp = new Vizinho;
+        temp->vizinho = b;
+        temp->proximoVizinho = NULL;
+        a->vizinhos = temp;
+    }else{
+        aux = a->vizinhos;
+        while (aux->proximoVizinho != NULL){
+            aux = aux->proximoVizinho;
+        }
+        Vizinho *temp = new Vizinho;
+        temp->vizinho = b;
+        temp->proximoVizinho = NULL;
+        aux->proximoVizinho = temp;
+    }
+}
+
+void gerarArquivoDOTNaoDirecionado(int tamanho){
     ofstream arquivo("grafo.dot");
     if (arquivo.is_open())
     {
@@ -80,7 +104,35 @@ void gerarArquivoDOT(int tamanho){
         }
         for (int i = 0; i < tamanho; i++){
             Vizinho *aux = grafo[i].vizinhos;
-            while (aux != NULL && i < aux->vizinho->id){
+            while (aux != NULL){
+                if(i < aux->vizinho->id){
+                    arquivo << "  " << i << " -- " << aux->vizinho->id << ";" << endl;
+                }
+                aux = aux->proximoVizinho;
+            }
+        }
+        arquivo << "}" << endl;
+        arquivo.close();
+        cout << "Arquivo 'grafo.dot' criado com sucesso!" << endl;
+    }
+    else
+    {
+        cout << "Erro ao criar o arquivo" << endl;
+    }
+}
+
+void gerarArquivoDOTDirecionado(int tamanho){
+    ofstream arquivo("grafo.dot");
+    if (arquivo.is_open())
+    {
+        arquivo << "digraph G {" << endl;
+        for (int i = 0; i < tamanho; i++)
+        {
+            arquivo << "  " << i << ";" << endl;
+        }
+        for (int i = 0; i < tamanho; i++){
+            Vizinho *aux = grafo[i].vizinhos;
+            while (aux != NULL){
                 arquivo << "  " << i << " -- " << aux->vizinho->id << ";" << endl;
                 aux = aux->proximoVizinho;
             }
@@ -103,6 +155,9 @@ void lerArquivoDOT(){
         return;
     }
     string linha;
+    string tipo;
+    getline(arquivo,tipo, ' ');
+    cout << tipo << endl;
     int x;
     int y;
     while (getline(arquivo, linha)) {
@@ -112,11 +167,88 @@ void lerArquivoDOT(){
             inicializa(vertices);
         }
         if(sscanf(linha.c_str(),"%d--%d;",&x,&x) == 2){
-            adicionaVizinho(&grafo[x], &grafo[y]);
+            if(strcmp(tipo.c_str(),"graph") == 0){
+                adicionaVizinhoNaoDirecionado(&grafo[x], &grafo[y]);
+            }
+            else{
+                adicionaVizinhoDirecionado(&grafo[x], &grafo[y]);
+            }
         }
     }
     
     arquivo.close();
+}
+
+void valorAleatorioNaoDirecionado(int tamanho, int ligacoes, int totalArestas){
+    vector<pair<int,int>> arestas(totalArestas);
+    int cont = 0;
+    for(int i = 0; i < tamanho; i++){
+        for(int j = i+1; j < tamanho; j++){
+            arestas[cont] = make_pair(i,j);
+            cont++;
+        }
+
+    }
+    std::random_device rd;
+    std::mt19937 g(rd());
+    shuffle(arestas.begin(), arestas.end(), g);
+    for(int i = 0; i < ligacoes; i++){
+        adicionaVizinhoNaoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second]);
+    }
+
+}
+
+void valorAleatorioDirecionado(int tamanho, int ligacoes, int totalArestas){
+    vector<pair<int,int>> arestas(totalArestas);
+    int cont = 0;
+    for(int i = 0; i < tamanho; i++){
+        for(int j = 0; j < tamanho; j++){
+            if(i != j){
+                arestas[cont] = make_pair(i,j);
+                cont++;
+            }
+        }
+
+    }
+    std::random_device rd;
+    std::mt19937 g(rd());
+    shuffle(arestas.begin(), arestas.end(), g);
+    for(int i = 0; i < totalArestas; i++){
+        cout << arestas[i].first << " - " << arestas[i].second << endl;
+    }
+    for(int i = 0; i < ligacoes; i++){
+        adicionaVizinhoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second]);
+    }
+
+}
+
+void grafoConexo(Vertice *grafo, int tamanho){
+    int *acesso = new int[tamanho];
+    for(int i = 0; i < tamanho; i++){
+        acesso[i] = 0;
+    }
+    acesso[0] = 1;
+    for(int k = 0; k < tamanho; k++){
+        for(int i = 0; i < tamanho; i++){
+            if(acesso[i] == 1){
+                Vizinho *aux = grafo[i].vizinhos;
+                while(aux != NULL){
+                    acesso[aux->vizinho->id] = 1;
+                    aux = aux->proximoVizinho;
+                }
+            } 
+        }
+    }
+
+    for(int i = 0; i < tamanho; i++){
+        if(acesso[i] == 0){
+            cout << "Grafo nÃ£o conexo" << endl;
+            delete[] acesso;
+            return;
+        }
+    }
+    cout << "Grafo conexo" << endl;
+    delete[] acesso;
 }
 
 int main()
@@ -143,16 +275,9 @@ int main()
 
         inicializa(tamanho);
         int arestaTotal = (tamanho * (tamanho - 1)) / 2;
-        int cont = 0;
-        while(cont < (arestaTotal*porcentagem)/100){
-            int x = rand() % tamanho;
-            int y = rand() % tamanho;
-            if(x != y){
-                adicionaVizinho(&grafo[x], &grafo[y]);
-                cont++;
-            }
-        }
-        gerarArquivoDOT(tamanho);
+
+        valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
+        gerarArquivoDOTNaoDirecionado(tamanho);
     }
     else if (tipo == 2)
     {
@@ -161,6 +286,11 @@ int main()
         cout << "Porcentagem de preenchimento: " << porcentagem << "%" << endl;
 
         inicializa(tamanho);
+        int arestaTotal = (tamanho * (tamanho - 1));
+        
+        valorAleatorioDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
+        gerarArquivoDOTDirecionado(tamanho);
+        grafoConexo(grafo, tamanho);
     }
     else
     {
