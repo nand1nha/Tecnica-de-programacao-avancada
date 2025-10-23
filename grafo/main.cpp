@@ -85,7 +85,7 @@ void criaGrafoNaoDirecionado(int tamanho, int porcentagem)
         {
             for (int j = 0; j < tamanho; j++)
             {
-                if (matriz[i][j] == 1)
+                if (matriz[i][j] == 1  && i < j)
                 {
                     arquivo << "  " << i << " -- " << j << ";" << endl;
                 }
