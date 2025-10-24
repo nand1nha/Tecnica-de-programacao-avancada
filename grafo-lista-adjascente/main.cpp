@@ -133,7 +133,7 @@ void gerarArquivoDOTDirecionado(int tamanho){
         for (int i = 0; i < tamanho; i++){
             Vizinho *aux = grafo[i].vizinhos;
             while (aux != NULL){
-                arquivo << "  " << i << " -- " << aux->vizinho->id << ";" << endl;
+                arquivo << "  " << i << " -> " << aux->vizinho->id << ";" << endl;
                 aux = aux->proximoVizinho;
             }
         }
@@ -166,13 +166,14 @@ void lerArquivoDOT(){
         if(linha.find("-") != string::npos){
             inicializa(vertices);
         }
-        if(sscanf(linha.c_str(),"%d--%d;",&x,&x) == 2){
-            if(strcmp(tipo.c_str(),"graph") == 0){
-                adicionaVizinhoNaoDirecionado(&grafo[x], &grafo[y]);
-            }
-            else{
-                adicionaVizinhoDirecionado(&grafo[x], &grafo[y]);
-            }
+        if(strcmp(tipo.c_str(),"graph") == 0){
+                if(sscanf(linha.c_str(),"%d--%d;",&x,&x) == 2){
+                    adicionaVizinhoNaoDirecionado(&grafo[x], &grafo[y]);
+                }
+        }else{
+             if(sscanf(linha.c_str(),"%d->%d;",&x,&x) == 2){
+                    adicionaVizinhoDirecionado(&grafo[x], &grafo[y]);
+                }
         }
     }
     
