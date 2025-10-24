@@ -175,7 +175,7 @@ void lerArquivoDOT(){
     }
     string linha;
 	string tipo;
-	getline(arquivo, tipo);
+	getline(arquivo, tipo,' ');
     int x;
     int y;
     int **matriz;
