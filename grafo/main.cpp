@@ -144,7 +144,7 @@ void criaGrafoDirecionado(int tamanho, int porcentagem)
             {
                 if (matriz[i][j] == 1)
                 {
-                    arquivo << "  " << i << " -- " << j << ";" << endl;
+                    arquivo << "  " << i << " -> " << j << ";" << endl;
                 }
             }
         }
@@ -174,6 +174,8 @@ void lerArquivoDOT(){
         return;
     }
     string linha;
+	string tipo;
+	getline(arquivo, tipo);
     int x;
     int y;
     int **matriz;
@@ -183,8 +185,14 @@ void lerArquivoDOT(){
         if (linha.find("-") != string::npos) {
             matriz = criarMatriz(vertices);
         }
-        if(sscanf(linha.c_str(),"%d--%d;",&x,&y) == 2){
-			matriz[x][y] = 1;
+		if(strcmp(tipo.c_str(),"digraph")){
+			if(sscanf(linha.c_str(),"%d->%d;",&x,&y) == 2){
+				matriz[x][y] = 1;
+			}
+		}else{
+			 if(sscanf(linha.c_str(),"%d--%d;",&x,&y) == 2){
+				matriz[x][y] = 1;
+			}
 		}
         
     }
