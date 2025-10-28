@@ -18,6 +18,8 @@ struct Vertice;
 struct Vizinho {
     Vertice *vizinho;
     Vizinho *proximoVizinho;
+    int peso;
+    int ligacao;
 };
 
 struct Vertice {
@@ -34,12 +36,14 @@ void inicializa(int tamanho){
     }
 }
 
-void adicionaVizinhoNaoDirecionado(Vertice *a, Vertice *b){
+void adicionaVizinhoNaoDirecionado(Vertice *a, Vertice *b, int ligacao, int peso){
     if (a == NULL || b == NULL)
         return;
     Vizinho *aux;
     if(a->vizinhos == NULL){
         Vizinho *temp = new Vizinho;
+        temp->peso = peso;
+        temp->ligacao = ligacao;
         temp->vizinho = b;
         temp->proximoVizinho = NULL;
         a->vizinhos = temp;
@@ -49,14 +53,16 @@ void adicionaVizinhoNaoDirecionado(Vertice *a, Vertice *b){
             aux = aux->proximoVizinho;
         }
         Vizinho *temp = new Vizinho;
+        temp->peso = peso;
+        temp->ligacao = ligacao;
         temp->vizinho = b;
         temp->proximoVizinho = NULL;
         aux->proximoVizinho = temp;
     }
-    //agora eu preciso fazer o mesmo processo para
-    //fazer o A ser vizinho de B
     if(b->vizinhos == NULL){
         Vizinho *temp = new Vizinho;
+        temp->peso = peso;
+        temp->ligacao = ligacao;
         temp->vizinho = a;
         temp->proximoVizinho = NULL;
         b->vizinhos = temp;
@@ -66,18 +72,22 @@ void adicionaVizinhoNaoDirecionado(Vertice *a, Vertice *b){
             aux = aux->proximoVizinho;
         }
         Vizinho *temp = new Vizinho;
+        temp->peso = peso;
+        temp->ligacao = ligacao;
         temp->vizinho = a;
         temp->proximoVizinho = NULL;
         aux->proximoVizinho = temp;
     }
 }
 
-void adicionaVizinhoDirecionado(Vertice *a, Vertice *b){
+void adicionaVizinhoDirecionado(Vertice *a, Vertice *b, int ligacao, int peso){
     if (a == NULL || b == NULL)
         return;
     Vizinho *aux;
     if(a->vizinhos == NULL){
         Vizinho *temp = new Vizinho;
+        temp->peso = peso;
+        temp->ligacao = ligacao;
         temp->vizinho = b;
         temp->proximoVizinho = NULL;
         a->vizinhos = temp;
@@ -88,6 +98,8 @@ void adicionaVizinhoDirecionado(Vertice *a, Vertice *b){
         }
         Vizinho *temp = new Vizinho;
         temp->vizinho = b;
+        temp->peso = peso;
+        temp->ligacao = ligacao;
         temp->proximoVizinho = NULL;
         aux->proximoVizinho = temp;
     }
@@ -106,7 +118,7 @@ void gerarArquivoDOTNaoDirecionado(int tamanho){
             Vizinho *aux = grafo[i].vizinhos;
             while (aux != NULL){
                 if(i < aux->vizinho->id){
-                    arquivo << "  " << i << " -- " << aux->vizinho->id << ";" << endl;
+                    arquivo << "  " << i << " -- " << aux->vizinho->id << " [label=" << aux->ligacao << ",weight=" << aux->peso << "]" << ";" << endl;
                 }
                 aux = aux->proximoVizinho;
             }
@@ -133,7 +145,7 @@ void gerarArquivoDOTDirecionado(int tamanho){
         for (int i = 0; i < tamanho; i++){
             Vizinho *aux = grafo[i].vizinhos;
             while (aux != NULL){
-                arquivo << "  " << i << " -> " << aux->vizinho->id << ";" << endl;
+                arquivo << "  " << i << " -> " << aux->vizinho->id << " [label=" << aux->ligacao << ",weight=" << aux->peso << "]" << ";" << endl;
                 aux = aux->proximoVizinho;
             }
         }
@@ -160,6 +172,8 @@ void lerArquivoDOT(){
     cout << tipo << endl;
     int x;
     int y;
+    int ligacao;
+    int peso;
     while (getline(arquivo, linha)) {
         cout << linha << endl;
         vertices++;
@@ -167,12 +181,12 @@ void lerArquivoDOT(){
             inicializa(vertices);
         }
         if(strcmp(tipo.c_str(),"graph") == 0){
-                if(sscanf(linha.c_str(),"%d--%d;",&x,&x) == 2){
-                    adicionaVizinhoNaoDirecionado(&grafo[x], &grafo[y]);
+                if(sscanf(linha.c_str(),"%d--%d [label=%d,weight=%d];",&x,&y,&ligacao,&peso) == 4){
+                    adicionaVizinhoNaoDirecionado(&grafo[x], &grafo[y], ligacao, peso);
                 }
         }else{
-             if(sscanf(linha.c_str(),"%d->%d;",&x,&x) == 2){
-                    adicionaVizinhoDirecionado(&grafo[x], &grafo[y]);
+             if(sscanf(linha.c_str(),"%d->%d [label=%d,weight=%d];",&x,&y,&ligacao,&peso) == 4){
+                    adicionaVizinhoDirecionado(&grafo[x], &grafo[y], ligacao, peso);
                 }
         }
     }
@@ -194,7 +208,8 @@ void valorAleatorioNaoDirecionado(int tamanho, int ligacoes, int totalArestas){
     std::mt19937 g(rd());
     shuffle(arestas.begin(), arestas.end(), g);
     for(int i = 0; i < ligacoes; i++){
-        adicionaVizinhoNaoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second]);
+        int peso = rand() % 10 + 1;
+        adicionaVizinhoNaoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second], peso, peso);
     }
 
 }
@@ -215,7 +230,8 @@ void valorAleatorioDirecionado(int tamanho, int ligacoes, int totalArestas){
     std::mt19937 g(rd());
     shuffle(arestas.begin(), arestas.end(), g);
     for(int i = 0; i < ligacoes; i++){
-        adicionaVizinhoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second]);
+        int peso = rand() % 10 + 1;
+        adicionaVizinhoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second], peso, peso);
     }
 
 }
@@ -249,6 +265,78 @@ void grafoConexo(Vertice *grafo, int tamanho){
     delete[] acesso;
 }
 
+void funcaoPrim(int tamanho){
+    Vertice *arvore = new Vertice[tamanho];
+    for(int i = 0; i < tamanho; i++){
+        arvore[i].id = i;
+        arvore[i].vizinhos = NULL;
+    }
+    bool *naArvore = new bool[tamanho];
+    for(int i = 0; i < tamanho; i++){
+        naArvore[i] = false;
+    }
+    naArvore[0] = true;
+    int menorPeso = 10;
+    Vizinho *aux;
+    Vizinho *temp;
+    int pos;
+    bool completo = false;
+    while(completo == false){
+        for(int i = 0; i < tamanho; i++){
+            if(naArvore[i]){
+                aux = grafo[i].vizinhos;
+                while(aux != NULL){
+                    if(!naArvore[aux->vizinho->id]){
+                        if(aux->peso <= menorPeso){
+                            menorPeso = aux->peso;
+                            temp = aux;
+                            pos = i;
+                        }
+                    }
+                    aux = aux->proximoVizinho;
+                }
+            }
+        }
+        adicionaVizinhoNaoDirecionado(&arvore[pos], temp->vizinho, temp->ligacao, temp->peso);
+        naArvore[temp->vizinho->id] = true;
+        menorPeso = 10;
+        completo = true;
+        for(int i = 0; i < tamanho; i++){
+            if(!naArvore[i]){
+                completo = false;
+            }
+        }
+    }
+    
+
+    ofstream arquivo("arvoreGeradoraMinima.dot");
+    if (arquivo.is_open())
+    {
+        arquivo << "graph G {" << endl;
+        for (int i = 0; i < tamanho; i++)
+        {
+            arquivo << "  " << i << ";" << endl;
+        }
+        for (int i = 0; i < tamanho; i++){
+            Vizinho *aux = arvore[i].vizinhos;
+            while (aux != NULL){
+                if(i < aux->vizinho->id){
+                    arquivo << "  " << i << " -- " << aux->vizinho->id << " [label=" << aux->ligacao << ",weight=" << aux->peso << "]" << ";" << endl;
+                }
+                aux = aux->proximoVizinho;
+            }
+        }
+        arquivo << "}" << endl;
+        arquivo.close();
+        cout << "Arquivo 'arvoreGeradoraMinima.dot' criado com sucesso!" << endl;
+    }
+    else
+    {
+        cout << "Erro ao criar o arquivo" << endl;
+    }
+
+}
+
 int main()
 {
     int tipo;
@@ -276,6 +364,8 @@ int main()
 
         valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTNaoDirecionado(tamanho);
+        grafoConexo(grafo, tamanho);
+        funcaoPrim(tamanho);
     }
     else if (tipo == 2)
     {
