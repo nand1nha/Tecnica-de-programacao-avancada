@@ -195,7 +195,7 @@ void lerArquivoDOT(){
 }
 
 void valorAleatorioNaoDirecionado(int tamanho, int ligacoes, int totalArestas){
-    vector<pair<int,int>> arestas(totalArestas);
+    vector<pair<int,int> > arestas(totalArestas);
     int cont = 0;
     for(int i = 0; i < tamanho; i++){
         for(int j = i+1; j < tamanho; j++){
@@ -204,9 +204,11 @@ void valorAleatorioNaoDirecionado(int tamanho, int ligacoes, int totalArestas){
         }
 
     }
-    std::random_device rd;
-    std::mt19937 g(rd());
-    shuffle(arestas.begin(), arestas.end(), g);
+    for(int i = 0; i < totalArestas*totalArestas; i++){
+        int x = rand() % totalArestas;
+        int y = rand() % totalArestas;
+        swap(arestas[x], arestas[y]);
+    }
     for(int i = 0; i < ligacoes; i++){
         int peso = rand() % 10 + 1;
         adicionaVizinhoNaoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second], peso, peso);
@@ -215,7 +217,7 @@ void valorAleatorioNaoDirecionado(int tamanho, int ligacoes, int totalArestas){
 }
 
 void valorAleatorioDirecionado(int tamanho, int ligacoes, int totalArestas){
-    vector<pair<int,int>> arestas(totalArestas);
+    vector<pair<int,int> > arestas(totalArestas);
     int cont = 0;
     for(int i = 0; i < tamanho; i++){
         for(int j = 0; j < tamanho; j++){
@@ -226,9 +228,11 @@ void valorAleatorioDirecionado(int tamanho, int ligacoes, int totalArestas){
         }
 
     }
-    std::random_device rd;
-    std::mt19937 g(rd());
-    shuffle(arestas.begin(), arestas.end(), g);
+    for(int i = 0; i < totalArestas*totalArestas; i++){
+        int x = rand() % totalArestas;
+        int y = rand() % totalArestas;
+        swap(arestas[x], arestas[y]);
+    }
     for(int i = 0; i < ligacoes; i++){
         int peso = rand() % 10 + 1;
         adicionaVizinhoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second], peso, peso);
@@ -236,7 +240,7 @@ void valorAleatorioDirecionado(int tamanho, int ligacoes, int totalArestas){
 
 }
 
-void grafoConexo(Vertice *grafo, int tamanho){
+void grafoConexo(int tamanho){
     int *acesso = new int[tamanho];
     for(int i = 0; i < tamanho; i++){
         acesso[i] = 0;
@@ -337,6 +341,10 @@ void funcaoPrim(int tamanho){
 
 }
 
+void funcaoKruskal(int tamanho){
+
+}
+
 int main()
 {
     int tipo;
@@ -364,7 +372,7 @@ int main()
 
         valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTNaoDirecionado(tamanho);
-        grafoConexo(grafo, tamanho);
+        grafoConexo(tamanho);
         funcaoPrim(tamanho);
     }
     else if (tipo == 2)
@@ -378,7 +386,7 @@ int main()
         
         valorAleatorioDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTDirecionado(tamanho);
-        grafoConexo(grafo, tamanho);
+        grafoConexo(tamanho);
     }
     else
     {
