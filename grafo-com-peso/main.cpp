@@ -204,11 +204,9 @@ void valorAleatorioNaoDirecionado(int tamanho, int ligacoes, int totalArestas){
         }
 
     }
-    for(int i = 0; i < totalArestas*totalArestas; i++){
-        int x = rand() % totalArestas;
-        int y = rand() % totalArestas;
-        swap(arestas[x], arestas[y]);
-    }
+    std::random_device rd;
+    std::mt19937 g(rd());
+    shuffle(arestas.begin(), arestas.end(), g);
     for(int i = 0; i < ligacoes; i++){
         int peso = rand() % 10 + 1;
         adicionaVizinhoNaoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second], peso, peso);
@@ -301,7 +299,7 @@ void funcaoPrim(int tamanho){
                 }
             }
         }
-        adicionaVizinhoNaoDirecionado(&arvore[pos], temp->vizinho, temp->ligacao, temp->peso);
+        adicionaVizinhoNaoDirecionado(&arvore[pos], &arvore[temp->vizinho->id], temp->ligacao, temp->peso);
         naArvore[temp->vizinho->id] = true;
         menorPeso = 10;
         completo = true;
