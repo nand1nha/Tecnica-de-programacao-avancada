@@ -7,9 +7,9 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": false,
-      "cwd": "/workspaces/Tecnica-de-programacao-avancada/grafo-lista-adjascente",
-      "program": "/workspaces/Tecnica-de-programacao-avancada/grafo-lista-adjascente/build/Debug/outDebug",
+      "externalConsole": true,
+      "cwd": "c:/Users/fsmar/OneDrive/Documentos/Tecnica-de-programacao-avancada/grafo-com-peso",
+      "program": "c:/Users/fsmar/OneDrive/Documentos/Tecnica-de-programacao-avancada/grafo-com-peso/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

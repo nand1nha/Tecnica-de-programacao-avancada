@@ -208,7 +208,7 @@ void valorAleatorioNaoDirecionado(int tamanho, int ligacoes, int totalArestas){
     std::mt19937 g(rd());
     shuffle(arestas.begin(), arestas.end(), g);
     for(int i = 0; i < ligacoes; i++){
-        int peso = rand() % 10 + 1;
+        int peso = 1;//rand() % 10 + 1;
         adicionaVizinhoNaoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second], peso, peso);
     }
 
@@ -255,6 +255,7 @@ void grafoConexo(int tamanho){
             } 
         }
     }
+
 
     for(int i = 0; i < tamanho; i++){
         if(acesso[i] == 0){
@@ -340,7 +341,71 @@ void funcaoPrim(int tamanho){
 }
 
 void funcaoKruskal(int tamanho){
+    Vertice *arvore = new Vertice[tamanho];
+    for(int i = 0; i < tamanho; i++){
+        arvore[i].id = i;
+        arvore[i].vizinhos = NULL;
+    }
+    int contSubArvore = 1;
+    int *subArvore = new int[tamanho];
+    for(int i = 0; i < tamanho; i++){
+        subArvore[i] = 0;
+    }
+    int menorPeso = 10;
+    Vizinho *aux;
+    Vizinho *temp;
+    int pos;
+    int completo = 0;
+    while(completo == 0){
+        for(int i = 0; i < tamanho; i++){
+            aux = grafo[i].vizinhos;
+            while(aux != NULL){
+                if(aux->peso <= menorPeso){
+                    if(subArvore[aux->vizinho->id] == 0){
+                        menorPeso = aux->peso;
+                        temp = aux;
+                        pos = i;
+                    }  
+                }
+                aux = aux->proximoVizinho;
+            }
+        }
+        adicionaVizinhoNaoDirecionado(&arvore[pos], &arvore[temp->vizinho->id], temp->ligacao, temp->peso);
+        
+        completo = 1;
+        menorPeso = 10;
+        for(int i = 0; i < tamanho; i++){
+            if(subArvore[i] == 0){
+                completo = 0;
+            }
+        }
+    }
 
+    ofstream arquivo("arvoreGeradoraMinima.dot");
+    if (arquivo.is_open())
+    {
+        arquivo << "graph G {" << endl;
+        for (int i = 0; i < tamanho; i++)
+        {
+            arquivo << "  " << i << ";" << endl;
+        }
+        for (int i = 0; i < tamanho; i++){
+            Vizinho *aux = arvore[i].vizinhos;
+            while (aux != NULL){
+                if(i < aux->vizinho->id){
+                    arquivo << "  " << i << " -- " << aux->vizinho->id << " [label=" << aux->ligacao << ",weight=" << aux->peso << "]" << ";" << endl;
+                }
+                aux = aux->proximoVizinho;
+            }
+        }
+        arquivo << "}" << endl;
+        arquivo.close();
+        cout << "Arquivo 'arvoreGeradoraMinima.dot' criado com sucesso!" << endl;
+    }
+    else
+    {
+        cout << "Erro ao criar o arquivo" << endl;
+    }
 }
 
 int main()
@@ -371,7 +436,8 @@ int main()
         valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTNaoDirecionado(tamanho);
         grafoConexo(tamanho);
-        funcaoPrim(tamanho);
+        //funcaoPrim(tamanho);
+        funcaoKruskal(tamanho);
     }
     else if (tipo == 2)
     {
