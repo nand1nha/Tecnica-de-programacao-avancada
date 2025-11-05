@@ -459,7 +459,7 @@ int main()
         valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTNaoDirecionado(tamanho);
         grafoConexo(tamanho);
-        //funcaoPrim(tamanho);
+        funcaoPrim(tamanho);
         funcaoKruskal(tamanho);
     }
     else if (tipo == 2)
