@@ -208,7 +208,7 @@ void valorAleatorioNaoDirecionado(int tamanho, int ligacoes, int totalArestas){
     std::mt19937 g(rd());
     shuffle(arestas.begin(), arestas.end(), g);
     for(int i = 0; i < ligacoes; i++){
-        int peso = 1;//rand() % 10 + 1;
+        int peso = rand() % 10 + 1;
         adicionaVizinhoNaoDirecionado(&grafo[arestas[i].first], &grafo[arestas[i].second], peso, peso);
     }
 
@@ -371,6 +371,13 @@ void funcaoKruskal(int tamanho){
             }
         }
         adicionaVizinhoNaoDirecionado(&arvore[pos], &arvore[temp->vizinho->id], temp->ligacao, temp->peso);
+        if(subArvore[pos] != 0){
+            subArvore[temp->vizinho->id] = subArvore[pos];
+        }else{
+            subArvore[pos] = contSubArvore;
+            subArvore[temp->vizinho->id] = contSubArvore;
+            contSubArvore++;
+        }
         
         completo = 1;
         menorPeso = 10;
@@ -436,8 +443,8 @@ int main()
         valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTNaoDirecionado(tamanho);
         grafoConexo(tamanho);
-        //funcaoPrim(tamanho);
-        funcaoKruskal(tamanho);
+        funcaoPrim(tamanho);
+        //funcaoKruskal(tamanho);
     }
     else if (tipo == 2)
     {
