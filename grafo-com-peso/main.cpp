@@ -372,7 +372,23 @@ void funcaoKruskal(int tamanho){
         }
         adicionaVizinhoNaoDirecionado(&arvore[pos], &arvore[temp->vizinho->id], temp->ligacao, temp->peso);
         if(subArvore[pos] != 0){
-            subArvore[temp->vizinho->id] = subArvore[pos];
+            if(subArvore[temp->vizinho->id] != 0){
+                if(subArvore[temp->vizinho->id] > subArvore[pos]){
+                    for(int i = 0; i < tamanho; i++){
+                        if(subArvore[i] == subArvore[temp->vizinho->id]){
+                            subArvore[i] = subArvore[pos];
+                        }
+                    }
+                }else{
+                    for(int i = 0; i < tamanho; i++){
+                        if(subArvore[i] == subArvore[pos]){
+                            subArvore[i] = subArvore[temp->vizinho->id];
+                        }
+                    }
+                }
+            }else{
+                subArvore[temp->vizinho->id] = subArvore[pos];
+            }
         }else{
             subArvore[pos] = contSubArvore;
             subArvore[temp->vizinho->id] = contSubArvore;
@@ -443,8 +459,8 @@ int main()
         valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTNaoDirecionado(tamanho);
         grafoConexo(tamanho);
-        funcaoPrim(tamanho);
-        //funcaoKruskal(tamanho);
+        //funcaoPrim(tamanho);
+        funcaoKruskal(tamanho);
     }
     else if (tipo == 2)
     {
