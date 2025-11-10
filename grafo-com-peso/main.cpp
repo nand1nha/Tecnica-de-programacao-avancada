@@ -238,36 +238,6 @@ void valorAleatorioDirecionado(int tamanho, int ligacoes, int totalArestas){
 
 }
 
-void grafoConexo(int tamanho){
-    int *acesso = new int[tamanho];
-    for(int i = 0; i < tamanho; i++){
-        acesso[i] = 0;
-    }
-    acesso[0] = 1;
-    for(int k = 0; k < tamanho; k++){
-        for(int i = 0; i < tamanho; i++){
-            if(acesso[i] == 1){
-                Vizinho *aux = grafo[i].vizinhos;
-                while(aux != NULL){
-                    acesso[aux->vizinho->id] = 1;
-                    aux = aux->proximoVizinho;
-                }
-            } 
-        }
-    }
-
-
-    for(int i = 0; i < tamanho; i++){
-        if(acesso[i] == 0){
-            cout << "Grafo nÃ£o conexo" << endl;
-            delete[] acesso;
-            return;
-        }
-    }
-    cout << "Grafo conexo" << endl;
-    delete[] acesso;
-}
-
 void funcaoPrim(int tamanho){
     Vertice *arvore = new Vertice[tamanho];
     for(int i = 0; i < tamanho; i++){
@@ -332,6 +302,7 @@ void funcaoPrim(int tamanho){
         arquivo << "}" << endl;
         arquivo.close();
         cout << "Arquivo 'arvoreGeradoraMinima.dot' criado com sucesso!" << endl;
+        system("dot -Tpng arvoreGeradoraMinima.dot -o grafoprim.png");
     }
     else
     {
@@ -424,11 +395,44 @@ void funcaoKruskal(int tamanho){
         arquivo << "}" << endl;
         arquivo.close();
         cout << "Arquivo 'arvoreGeradoraMinima.dot' criado com sucesso!" << endl;
+        system("dot -Tpng arvoreGeradoraMinima.dot -o grafokruskal.png");
     }
     else
     {
         cout << "Erro ao criar o arquivo" << endl;
     }
+}
+
+void grafoConexo(int tamanho){
+    int *acesso = new int[tamanho];
+    for(int i = 0; i < tamanho; i++){
+        acesso[i] = 0;
+    }
+    acesso[0] = 1;
+    for(int k = 0; k < tamanho; k++){
+        for(int i = 0; i < tamanho; i++){
+            if(acesso[i] == 1){
+                Vizinho *aux = grafo[i].vizinhos;
+                while(aux != NULL){
+                    acesso[aux->vizinho->id] = 1;
+                    aux = aux->proximoVizinho;
+                }
+            } 
+        }
+    }
+
+
+    for(int i = 0; i < tamanho; i++){
+        if(acesso[i] == 0){
+            cout << "Grafo nÃ£o conexo" << endl;
+            delete[] acesso;
+            return;
+        }
+    }
+    cout << "Grafo conexo" << endl;
+    funcaoPrim(tamanho);
+    funcaoKruskal(tamanho);
+    delete[] acesso;
 }
 
 int main()
@@ -459,8 +463,7 @@ int main()
         valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTNaoDirecionado(tamanho);
         grafoConexo(tamanho);
-        funcaoPrim(tamanho);
-        funcaoKruskal(tamanho);
+        
     }
     else if (tipo == 2)
     {
