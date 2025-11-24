@@ -403,6 +403,85 @@ void funcaoKruskal(int tamanho){
     }
 }
 
+void funcaoDijkstra(int tamanho, int origem, int destino){
+    int *v = new int[tamanho];
+    for(int j = 0; j < tamanho; j++){
+        v[j] = 0;
+    }
+    int *d = new int[tamanho];
+    int *p = new int[tamanho];
+    for(int j = 0; j < tamanho; j++){
+        d[j] = 9999;
+        p[j] = 0;
+    }
+
+    d[origem] = 0;
+    p[origem] = -1;
+    int vertice = origem;
+    int menorDistancia = 999;
+    Vizinho *aux;
+    aux = grafo[vertice].vizinhos;
+
+    while(d[destino] == 9999){
+        while(aux != NULL){
+            if(aux->peso + d[vertice] < d[aux->vizinho->id]){
+                d[aux->vizinho->id] = aux->peso + d[vertice];
+                p[aux->vizinho->id] = vertice;
+                if(d[aux->vizinho->id] < menorDistancia){
+                    menorDistancia = aux->vizinho->id;
+                }
+            }
+            aux = aux->proximoVizinho;
+        }
+        aux = grafo[menorDistancia].vizinhos;
+        vertice = menorDistancia;
+        menorDistancia = 999;
+    }
+    cout << "Caminho de " << origem << " para " << destino << ": ";
+    int aux = p[destino];
+    int cont = 1;
+    int caminho[tamanho];
+    caminho[0] = destino;
+    while(aux != -1){
+        caminho[cont] = aux;
+        aux = p[aux];
+        cont++;
+    }
+    for(int i = cont-1; i >= 0; i--){
+        cout << caminho[i] << " -> ";
+    }
+    ofstream arquivo("caminhoMinimo.dot");
+    if (arquivo.is_open())
+    {
+        arquivo << "graph G {" << endl;
+        for (int i = 0; i < tamanho; i++)
+        {
+            arquivo << "  " << i << ";" << endl;
+        }
+        for (int i = 0; i < tamanho; i++){
+            Vizinho *aux = arvore[i].vizinhos;
+            while (aux != NULL){
+                if(i < aux->vizinho->id){
+                    for(int j = 0; j < cont; j++){
+                        if()
+                        arquivo << "  " << i << " -- " << aux->vizinho->id << " [label=" << aux->ligacao << ",weight=" << aux->peso << "]" << ";" << endl;
+                    }
+                    
+                }
+                aux = aux->proximoVizinho;
+            }
+        }
+        arquivo << "}" << endl;
+        arquivo.close();
+        cout << "Arquivo 'caminhoMinimo.dot' criado com sucesso!" << endl;
+        system("dot -Tpng caminhoMinimo.dot -o grafodijkstra.png");
+    }
+    else
+    {
+        cout << "Erro ao criar o arquivo" << endl;
+    }
+}
+
 void grafoConexo(int tamanho){
     int *acesso = new int[tamanho];
     for(int i = 0; i < tamanho; i++){
