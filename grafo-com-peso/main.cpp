@@ -443,6 +443,7 @@ void funcaoDijkstra(int tamanho, int origem, int destino){
     }
     cout << "Caminho de " << origem << " para " << destino << ": ";
     int auxiliar = p[destino];
+    grafo[destino].pintar = true;
     int cont = 1;
     int caminho[tamanho];
     caminho[0] = destino;
