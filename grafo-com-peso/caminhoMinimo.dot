@@ -1,5 +1,5 @@
 graph G {
-  0;
+  0 [color=red];
   1;
   2;
   3;

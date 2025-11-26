@@ -25,6 +25,7 @@ struct Vizinho {
 struct Vertice {
     int id;
     Vizinho *vizinhos;
+    bool pintar;
 };
 
 Vertice *grafo;
@@ -33,6 +34,7 @@ void inicializa(int tamanho){
     for(int i = 0; i < tamanho; i++){
         grafo[i].id=i;
         grafo[i].vizinhos = NULL;
+        grafo[i].pintar = false;
     }
 }
 
@@ -446,6 +448,7 @@ void funcaoDijkstra(int tamanho, int origem, int destino){
     caminho[0] = destino;
     while(auxiliar != -1){
         caminho[cont] = auxiliar;
+        grafo[auxiliar].pintar = true;
         auxiliar = p[auxiliar];
         cont++;
     }
@@ -458,17 +461,21 @@ void funcaoDijkstra(int tamanho, int origem, int destino){
         arquivo << "graph G {" << endl;
         for (int i = 0; i < tamanho; i++)
         {
-            arquivo << "  " << i << ";" << endl;
+            if(grafo[i].pintar){
+                arquivo << "  " << i << " [color=red];" << endl;
+            }else{
+                arquivo << "  " << i << ";" << endl;
+            }
         }
         for (int i = 0; i < tamanho; i++){
-            Vizinho *aux = arvore[i].vizinhos;
+            Vizinho *aux = grafo[i].vizinhos;
             while (aux != NULL){
                 if(i < aux->vizinho->id){
-                    for(int j = 0; j < cont; j++){
-                        if()
+                    if(grafo[i].pintar && grafo[aux->vizinho->id].pintar){
+                        arquivo << "  " << i << " -- " << aux->vizinho->id << " [label=" << aux->ligacao << ",weight=" << aux->peso << ", color=red]" << ";" << endl;
+                    }else{
                         arquivo << "  " << i << " -- " << aux->vizinho->id << " [label=" << aux->ligacao << ",weight=" << aux->peso << "]" << ";" << endl;
                     }
-                    
                 }
                 aux = aux->proximoVizinho;
             }
