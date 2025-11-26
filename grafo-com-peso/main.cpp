@@ -126,6 +126,7 @@ void gerarArquivoDOTNaoDirecionado(int tamanho){
         arquivo << "}" << endl;
         arquivo.close();
         cout << "Arquivo 'grafo.dot' criado com sucesso!" << endl;
+        system("dot -Tpng grafo.dot -o grafo.png");
     }
     else
     {
@@ -424,7 +425,7 @@ void funcaoDijkstra(int tamanho, int origem, int destino){
 
     while(d[destino] == 9999){
         while(aux != NULL){
-            if(aux->peso + d[vertice] < d[aux->vizinho->id]){
+            if(v[aux->vizinho->id] != 1 && aux->peso + d[vertice] < d[aux->vizinho->id]){
                 d[aux->vizinho->id] = aux->peso + d[vertice];
                 p[aux->vizinho->id] = vertice;
                 if(d[aux->vizinho->id] < menorDistancia){
@@ -433,18 +434,19 @@ void funcaoDijkstra(int tamanho, int origem, int destino){
             }
             aux = aux->proximoVizinho;
         }
+        v [vertice] = 1;
         aux = grafo[menorDistancia].vizinhos;
         vertice = menorDistancia;
         menorDistancia = 999;
     }
     cout << "Caminho de " << origem << " para " << destino << ": ";
-    int aux = p[destino];
+    int auxiliar = p[destino];
     int cont = 1;
     int caminho[tamanho];
     caminho[0] = destino;
-    while(aux != -1){
-        caminho[cont] = aux;
-        aux = p[aux];
+    while(auxiliar != -1){
+        caminho[cont] = auxiliar;
+        auxiliar = p[auxiliar];
         cont++;
     }
     for(int i = cont-1; i >= 0; i--){
@@ -509,8 +511,8 @@ void grafoConexo(int tamanho){
         }
     }
     cout << "Grafo conexo" << endl;
-    funcaoPrim(tamanho);
-    funcaoKruskal(tamanho);
+    // funcaoPrim(tamanho);
+    // funcaoKruskal(tamanho);
     delete[] acesso;
 }
 
@@ -542,6 +544,10 @@ int main()
         valorAleatorioNaoDirecionado(tamanho, (arestaTotal*porcentagem)/100, arestaTotal);
         gerarArquivoDOTNaoDirecionado(tamanho);
         grafoConexo(tamanho);
+        int destino;
+        cout << "Digite o vertice de destino para o Dijkstra: ";
+        cin >> destino;
+        funcaoDijkstra(tamanho, 0, destino);
         
     }
     else if (tipo == 2)
