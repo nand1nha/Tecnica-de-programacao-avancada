@@ -25,7 +25,7 @@ struct Vizinho {
 struct Vertice {
     int id;
     Vizinho *vizinhos;
-    bool pintar;
+    int pintar;
     int qntVizinhos;
 };
 
@@ -282,9 +282,9 @@ int guloso (Vertice *G, int *color, int tamanho) {
         color[i] = -1;
     }
     for(int i = 0; i < tamanho; i++){
-        bool available[tamanho];
+        bool available[100];
         int c;
-        for(c = 0; c < tamanho; c++){
+        for(c = 0; c < k; c++){
             available[c] = true;
         }
         for(Vizinho *aux = G[i].vizinhos; aux != NULL; aux = aux->proximoVizinho){
@@ -293,13 +293,15 @@ int guloso (Vertice *G, int *color, int tamanho) {
             }
         }
         c = 0;
-        while(c < tamanho &&  !available[c]){
+        while(c < k &&  !available[c]){
             c++;
         }
         if (c < k){
             color[i] = c;
+            G[i].pintar = c;
         }else{
             color[i] = k;
+            G[i].pintar = k;
             k++;
         }
     }
@@ -307,7 +309,20 @@ int guloso (Vertice *G, int *color, int tamanho) {
 }
 
 void dsatur (Vertice *G, int *color, int tamanho) {
-    
+    int maiorValor = -1;
+    int pos;
+    for(int i = 0; i < tamanho; i++){
+        for(int j = 0; j < tamanho; j++){
+            if(G[j].qntVizinhos > maiorValor){
+                maiorValor = G[i].qntVizinhos;
+                pos = j;
+            }
+        }
+        color[i] = pos;
+    }
+    for(int i = 0; i < tamanho; i++){
+        cout << color[i] << " ";
+    }
 
 }
 
@@ -343,7 +358,7 @@ int main()
         cout << "Coloracao gulosa do grafo:" << endl;
         int *color = new int[tamanho];
         int cores = guloso(grafo, color, tamanho);
-        
+        cout << "Numero de cores usadas: " << cores << endl;
     }
     else if (tipo == 2)
     {
