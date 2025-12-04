@@ -35,7 +35,8 @@ void inicializa(int tamanho){
     for(int i = 0; i < tamanho; i++){
         grafo[i].id=i;
         grafo[i].vizinhos = NULL;
-        grafo[i].pintar = false;
+        grafo[i].pintar = 0;
+        grafo[i].qntVizinhos = 0;
     }
 }
 
@@ -311,17 +312,88 @@ int guloso (Vertice *G, int *color, int tamanho) {
 void dsatur (Vertice *G, int *color, int tamanho) {
     int maiorValor = -1;
     int pos;
+    bool *visitados = new bool[tamanho];
+    for(int i = 0; i < tamanho; i++){
+        visitados[i] = false;
+    }
     for(int i = 0; i < tamanho; i++){
         for(int j = 0; j < tamanho; j++){
-            if(G[j].qntVizinhos > maiorValor){
+            if(G[j].qntVizinhos > maiorValor && !visitados[j]){
                 maiorValor = G[i].qntVizinhos;
                 pos = j;
             }
         }
         color[i] = pos;
+        visitados[pos] = true;
+        maiorValor = -1;
     }
-    for(int i = 0; i < tamanho; i++){
-        cout << color[i] << " ";
+    int corAtual = 0;
+    G[color[0]].pintar = corAtual;
+    for(int i = 1; i < tamanho; i++){
+        Vizinho *aux = G[color[i]].vizinhos;
+        while (aux != NULL)
+        {
+            if(aux->vizinho->pintar == corAtual){
+                corAtual++;
+            }
+            aux = aux->proximoVizinho;
+        }
+        G[color[i]].pintar = corAtual;
+        corAtual = 0;  
+    }
+
+}
+
+void pintaGrafo(int tamanho){
+    ofstream arquivo("grafoColorido.dot");
+    if (arquivo.is_open())
+    {
+        arquivo << "graph G {" << endl;
+        for (int i = 0; i < tamanho; i++)
+        {
+            switch (grafo[i].pintar)
+            {
+            case 0:
+                arquivo << "  " << i << "[color=red]" <<";" << endl;
+                break;
+            case 1:
+                arquivo << "  " << i << "[color=blue]" <<";" << endl;
+                break;
+            case 2:
+                arquivo << "  " << i << "[color=green]" <<";" << endl;
+                break;
+            case 3:
+                arquivo << "  " << i << "[color=yellow]" <<";" << endl;
+                break;
+            case 4:
+                arquivo << "  " << i << "[color=orange]" <<";" << endl;
+                break;
+            case 5:
+                arquivo << "  " << i << "[color=purple]" <<";" << endl;
+                break;
+            
+            default:
+                break;
+            }
+            
+        }
+        for (int i = 0; i < tamanho; i++){
+            Vizinho *aux = grafo[i].vizinhos;
+            while (aux != NULL){
+                if(i < aux->vizinho->id){
+                    arquivo << "  " << i << " -- " << aux->vizinho->id << " [label=" << aux->ligacao << ",weight=" << aux->peso << "]" << ";" << endl;
+                }
+                aux = aux->proximoVizinho;
+            }
+        }
+        arquivo << "}" << endl;
+        arquivo.close();
+        cout << "Arquivo 'grafoColorido.dot' criado com sucesso!" << endl;
+        system("dot -Tpng grafoColorido.dot -o grafoColorido.png");
+    }
+    else
+    {
+        cout << "Erro ao criar o arquivo" << endl;
     }
 
 }
@@ -358,7 +430,9 @@ int main()
         cout << "Coloracao gulosa do grafo:" << endl;
         int *color = new int[tamanho];
         int cores = guloso(grafo, color, tamanho);
-        cout << "Numero de cores usadas: " << cores << endl;
+        pintaGrafo(tamanho);
+        // dsatur(grafo, color, tamanho);
+        // pintaGrafo(tamanho);
     }
     else if (tipo == 2)
     {
