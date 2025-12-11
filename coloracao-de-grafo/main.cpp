@@ -277,7 +277,7 @@ void grafoConexo(int tamanho){
     delete[] acesso;
 }
 
-int guloso (Vertice *G, int *color, int tamanho) {
+int guloso (Vertice *G, int *color, int tamanho, int seq[]) {
     int k = 0;
     for(int i = 0; i < tamanho; i++){
         color[i] = -1;
@@ -288,7 +288,7 @@ int guloso (Vertice *G, int *color, int tamanho) {
         for(c = 0; c < k; c++){
             available[c] = true;
         }
-        for(Vizinho *aux = G[i].vizinhos; aux != NULL; aux = aux->proximoVizinho){
+        for(Vizinho *aux = G[seq[i]].vizinhos; aux != NULL; aux = aux->proximoVizinho){
             if(color[aux->vizinho->id] != -1){
                 available[color[aux->vizinho->id]] = false;
             }
@@ -307,6 +307,36 @@ int guloso (Vertice *G, int *color, int tamanho) {
         }
     }
     return k;
+}
+
+void swap(int *x, int *y) {
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+int *melhorsequencia;
+int menorCor=999;
+
+void permute(int arr[], int l, int r, int tamanho, int *color) {
+    if (l == r) {
+        
+        melhorsequencia = new int[tamanho];
+        int qntCorNova = guloso(grafo, color, tamanho, arr);
+        if (qntCorNova < menorCor){
+            menorCor = qntCorNova;
+            for (int i = 0; i <= r; i++) {
+                melhorsequencia[i] = arr[i];
+            }
+        }
+    } else {
+        for (int i = l; i <= r; i++) {
+            swap(&arr[l], &arr[i]);
+            permute(arr, l + 1, r, tamanho, color);
+            swap(&arr[l], &arr[i]);
+        }
+    }
+
 }
 
 void dsatur (Vertice *G, int *color, int tamanho) {
@@ -429,7 +459,13 @@ int main()
 
         cout << "Coloracao gulosa do grafo:" << endl;
         int *color = new int[tamanho];
-        int cores = guloso(grafo, color, tamanho);
+        int *arr = new int[tamanho];
+        for(int i = 0; i < tamanho; i++){
+            arr[i] = i;
+        }
+        permute(arr, 0, tamanho - 1, tamanho, color);
+        
+        
         pintaGrafo(tamanho);
         // dsatur(grafo, color, tamanho);
         // pintaGrafo(tamanho);
