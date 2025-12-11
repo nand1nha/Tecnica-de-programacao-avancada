@@ -463,12 +463,14 @@ int main()
         for(int i = 0; i < tamanho; i++){
             arr[i] = i;
         }
-        permute(arr, 0, tamanho - 1, tamanho, color);
+       permute(arr, 0, tamanho - 1, tamanho, color);
+
+       //guloso(grafo, color, tamanho, arr);
         
         
         pintaGrafo(tamanho);
-        // dsatur(grafo, color, tamanho);
-        // pintaGrafo(tamanho);
+        //dsatur(grafo, color, tamanho);
+        //pintaGrafo(tamanho);
     }
     else if (tipo == 2)
     {
